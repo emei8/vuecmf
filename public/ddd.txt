@@ -1,0 +1,250 @@
+array (
+  'nav_menu' => 
+  array (
+    1 => 
+    array (
+      'id' => 1,
+      'title' => '系统设置',
+      'icon' => '',
+      'pid' => 0,
+      'model_id' => 0,
+      'status' => 1,
+      'component' => '',
+      'path' => '1',
+      'model_name' => NULL,
+      'filter_field' => NULL,
+      'top_id' => 1,
+      'permission' => 
+      array (
+      ),
+      'children' => 
+      array (
+        15 => 
+        array (
+          'id' => 15,
+          'title' => '菜单管理',
+          'icon' => 'ios-home-outline',
+          'pid' => 1,
+          'model_id' => 1,
+          'status' => 1,
+          'component' => 'template/list/menu_tree',
+          'path' => 'get_menu_tree',
+          'model_name' => 'auth_menu_model',
+          'filter_field' => '',
+          'top_id' => 1,
+          'permission' => 
+          array (
+            'nav' => 'get_nav_menu',
+            'list' => 'get_menu_tree',
+            'save' => 'save_node',
+            'del' => 'del_node',
+            'tree' => 'get_format_tree',
+            'status' => 'set_menu_status',
+          ),
+        ),
+        20 => 
+        array (
+          'id' => 20,
+          'title' => '模型管理',
+          'icon' => 'ios-cube',
+          'pid' => 1,
+          'model_id' => 0,
+          'status' => 1,
+          'component' => '',
+          'path' => '',
+          'model_name' => NULL,
+          'filter_field' => NULL,
+          'top_id' => 1,
+          'permission' => 
+          array (
+          ),
+          'children' => 
+          array (
+            21 => 
+            array (
+              'id' => 21,
+              'title' => '模型列表',
+              'icon' => '',
+              'pid' => 20,
+              'model_id' => 4,
+              'status' => 1,
+              'component' => 'template/list/single_list',
+              'path' => 'get_model_list',
+              'model_name' => 'auth_model_model',
+              'filter_field' => '',
+              'top_id' => 1,
+              'permission' => 
+              array (
+                'list' => 'get_model_list',
+                0 => 'get_model',
+                'save' => 'save_auth_model',
+                'del' => 'del_model',
+              ),
+            ),
+            22 => 
+            array (
+              'id' => 22,
+              'title' => '模型字段列表',
+              'icon' => '',
+              'pid' => 20,
+              'model_id' => 5,
+              'status' => 1,
+              'component' => 'template/list/category_list',
+              'path' => 'get_model_field_list',
+              'model_name' => 'model_field_model',
+              'filter_field' => 'model_id',
+              'top_id' => 1,
+              'permission' => 
+              array (
+                'list' => 'get_model_field_list',
+                'category' => 'get_model_field_category',
+                'save' => 'save_model_field',
+                'del' => 'del_model_field',
+              ),
+            ),
+            23 => 
+            array (
+              'id' => 23,
+              'title' => '模型操作项列表',
+              'icon' => '',
+              'pid' => 20,
+              'model_id' => 6,
+              'status' => 1,
+              'component' => 'template/list/category_list',
+              'path' => 'get_model_operate_list',
+              'model_name' => 'model_operate_model',
+              'filter_field' => 'model_id',
+              'top_id' => 1,
+              'permission' => 
+              array (
+                'list' => 'get_model_operate_list',
+                'category' => 'get_model_operate_category',
+                'save' => 'save_model_operate',
+              ),
+            ),
+            24 => 
+            array (
+              'id' => 24,
+              'title' => '字段值选项列表',
+              'icon' => '',
+              'pid' => 20,
+              'model_id' => 7,
+              'status' => 1,
+              'component' => 'template/list/category_list',
+              'path' => 'get_field_option_list',
+              'model_name' => 'field_option_model',
+              'filter_field' => 'model_id',
+              'top_id' => 1,
+              'permission' => 
+              array (
+                'list' => 'get_field_option_list',
+                'save' => 'save_field_option',
+                'category' => 'get_field_option_category',
+                'del' => 'del_field_option',
+              ),
+            ),
+          ),
+          'active' => 21,
+        ),
+        26 => 
+        array (
+          'id' => 26,
+          'title' => '管理员管理',
+          'icon' => 'md-people',
+          'pid' => 1,
+          'model_id' => 8,
+          'status' => 1,
+          'component' => 'template/list/admin_list',
+          'path' => 'get_admin_list',
+          'model_name' => 'admin_model',
+          'filter_field' => '',
+          'top_id' => 1,
+          'permission' => 
+          array (
+            'list' => 'get_admin_list',
+            'save' => 'save_admin',
+            'del' => 'del_admin',
+            'status' => 'set_admin_status',
+            'detail' => 'get_admin_detail',
+            'category' => 'get_admin_category',
+            'login' => 'login',
+            '' => 'logout',
+            'set_role' => 'set_admin_role',
+          ),
+        ),
+        27 => 
+        array (
+          'id' => 27,
+          'title' => '角色与权限管理',
+          'icon' => '',
+          'pid' => 1,
+          'model_id' => 9,
+          'status' => 1,
+          'component' => 'template/list/role_auth_tree',
+          'path' => 'get_auth_item_list',
+          'model_name' => 'auth_item_model',
+          'filter_field' => '',
+          'top_id' => 1,
+          'permission' => 
+          array (
+            'list' => 'get_auth_item_list',
+            'save' => 'save_auth_item',
+            'del' => 'del_auth_item',
+            'status' => 'set_auth_item_status',
+            'detail' => 'get_auth_item_detail',
+            'category' => 'get_auth_item_category',
+            'set_auth' => 'set_auth_item',
+            'set_menu' => 'set_menu_item',
+            'get_operate' => 'get_menu_operate',
+            'set_operate' => 'set_menu_operate',
+          ),
+        ),
+      ),
+      'active' => 15,
+    ),
+    2 => 
+    array (
+      'id' => 2,
+      'title' => '内容管理',
+      'icon' => '',
+      'pid' => 0,
+      'model_id' => 0,
+      'status' => 1,
+      'component' => '',
+      'path' => '2',
+      'model_name' => NULL,
+      'filter_field' => NULL,
+      'top_id' => 2,
+      'permission' => 
+      array (
+      ),
+      'children' => 
+      array (
+        25 => 
+        array (
+          'id' => 25,
+          'title' => '单页管理',
+          'icon' => '',
+          'pid' => 2,
+          'model_id' => 2,
+          'status' => 1,
+          'component' => 'template/list/single_list',
+          'path' => 'get_single_list_list',
+          'model_name' => 'single_list_model',
+          'filter_field' => '',
+          'top_id' => 2,
+          'permission' => 
+          array (
+            'list' => 'get_single_list_list',
+            'del' => 'del_single_list',
+            'status' => 'set_single_list_status',
+            'detail' => 'get_single_list_detail',
+            'category' => 'get_single_list_category',
+          ),
+        ),
+      ),
+      'active' => 25,
+    ),
+  ),
+  'active' => '1',
+)
