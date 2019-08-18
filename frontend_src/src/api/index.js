@@ -1,8 +1,9 @@
 //import axios from "axios";
+import Vue from 'vue'
 import '@/plugins/axios'
 import store from '../store'
 import * as cookie from '@/utils/cookie'
-
+import '@/plugins/iview.js'
 
 //export const api_map = store.state.model_api_map
 //菜单后端链接映射
@@ -58,8 +59,8 @@ export function request(model_name,action_name,method,data){
                 store.dispatch('setModelApiMap', res.data)
                 api_map = res.data
 
-                if(typeof api_map[model_name]['actions'][action_name].path == "undefined"){
-                    alert('模型名称（' + model_name + '）操作名称（' + action_name + '）没有找到相应后端API配置！');
+                if(typeof api_map[model_name]['actions'][action_name] == "undefined"){
+                    return { code: 500, msg:'对不起，您没有此操作权限！' }
                 }else{
                     return axios({
                         method: method,
@@ -80,8 +81,8 @@ export function request(model_name,action_name,method,data){
 
         })
     }else{
-        if(typeof api_map[model_name]['actions'][action_name].path == "undefined"){
-            alert('模型名称（' + model_name + '）操作名称（' + action_name + '）没有找到相应后端API配置！');
+        if(typeof api_map[model_name]['actions'][action_name] == "undefined"){
+            return { code: 500, msg:'对不起，您没有此操作权限！' }
         }else {
             return axios({
                 method: method,
