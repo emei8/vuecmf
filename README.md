@@ -20,4 +20,13 @@ VueCMF开发框架主要有以下功能：
 
 ## 使用文档
 
-+ [使用手册](http://www.vuecmf.com/help)
++ [使用手册(http://www.vuecmf.com)](http://www.vuecmf.com/help) 
+
+
+## Donation
+If you like the project, I hope you donate this project so that the project will get better development, 
+Thank you.
+
+Alipay：
+
+ ![image](http://www.vuecmf.com/static/vuecmf_alipay.png)
