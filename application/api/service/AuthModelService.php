@@ -104,65 +104,66 @@ CLASS;
             if(empty($data['model_name'])) throw new Exception('模型名不能为空');
             if(empty($data['id'])) throw new Exception('模型ID不能为空');
 
-            //生成控制器
-            $model_name = getModelTableName($data['model_name']);
-            $model_class_name = Loader::parseName($model_name,1);
-            $headRemark = $this->makeFileRemark();
-
-            $controller_class = <<<CLASS
-{$headRemark}
-
-namespace app\\api\\controller;
-
-use think\\facade\\Request;
-
-class {$model_class_name} extends Base
-{
-
-    protected function initialize(){
-        \$this->model = model('{$model_class_name}');
-        if(Request::action() == 'save'){
-            \$this->validate = new \\app\\api\\validate\\{$model_class_name}();
-        }
-    }
-
-}
-CLASS;
-
-            file_put_contents(__DIR__.'/../controller/'.$model_class_name.'.php',$controller_class);
-
-            $this->makeModel($data['model_name']);
-
-            //生成验证器
-            $validate_class = <<<CLASS
-{$headRemark}
-
-namespace app\\api\\validate;
-
-use think\\Validate;
-
-class {$model_class_name} extends Validate
-{
-    /**
-     * 定义验证规则
-     * 格式：'字段名'	=>	['规则1','规则2'...]
-     *
-     * @var array
-     */	
-	protected \$rule = [];
-    
-    /**
-     * 定义错误信息
-     * 格式：'字段名.规则名'	=>	'错误信息'
-     *
-     * @var array
-     */	
-    protected \$message = [];
-}
-CLASS;
-            file_put_contents(__DIR__.'/../validate/'.$model_class_name.'.php',$validate_class);
-
             if($is_add) {
+                //生成控制器
+                $model_name = getModelTableName($data['model_name']);
+                $model_class_name = Loader::parseName($model_name,1);
+                $headRemark = $this->makeFileRemark();
+
+                $controller_class = <<<CLASS
+{$headRemark}
+    
+    namespace app\\api\\controller;
+    
+    use think\\facade\\Request;
+    
+    class {$model_class_name} extends Base
+    {
+    
+        protected function initialize(){
+            \$this->model = model('{$model_class_name}');
+            if(Request::action() == 'save'){
+                \$this->validate = new \\app\\api\\validate\\{$model_class_name}();
+            }
+        }
+    
+    }
+CLASS;
+
+                file_put_contents(__DIR__.'/../controller/'.$model_class_name.'.php',$controller_class);
+
+                $this->makeModel($data['model_name']);
+
+                //生成验证器
+                $validate_class = <<<CLASS
+{$headRemark}
+    
+    namespace app\\api\\validate;
+    
+    use think\\Validate;
+    
+    class {$model_class_name} extends Validate
+    {
+        /**
+         * 定义验证规则
+         * 格式：'字段名'	=>	['规则1','规则2'...]
+         *
+         * @var array
+         */	
+        protected \$rule = [];
+        
+        /**
+         * 定义错误信息
+         * 格式：'字段名.规则名'	=>	'错误信息'
+         *
+         * @var array
+         */	
+        protected \$message = [];
+    }
+CLASS;
+                file_put_contents(__DIR__.'/../validate/'.$model_class_name.'.php',$validate_class);
+
+
                 //创建表，增加是否存在判断
                 $sql = 'CREATE TABLE IF NOT EXISTS `' . $this->prefix . $model_name . '` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT \'自增ID\',
@@ -175,8 +176,8 @@ CLASS;
                 //向model_field表 写入相应记录
                 Db::execute('DELETE FROM `' . $this->prefix . 'model_field` where model_id = ' . $data['id'] . ';');
                 $sql = 'INSERT INTO `' . $this->prefix . 'model_field` ( `model_id`, `label`, `field_name`, `type`, `length`, `is_null`, `is_index`, `is_unique`, `sort_num`, `note`, `status`, `form_type`, `relation_model_id`, `relation_field_id`, `relation_condition`, `form_default`, `is_label`, `is_primary_key`, `is_auto_increment`, `is_signed`, `column_width`, `is_show`, `is_fixed`, `is_filter`, `filter_field`, `filter_form_name`) VALUES
-( ' . $data['id'] . ', \'ID\', \'id\', \'int\', 11, 2, 1, 1, 1, \'自增ID\', 2, \'hidden\', 0, NULL, \'\', \' \', 2, 1, 1, 1, 150, 1, 2, 1, \'\', \'\'),
-( ' . $data['id'] . ', \'状态\', \'status\', \'tinyint\', 4, 1, 2, 2, 2, \'状态：1=开启，2=关闭\', 1, \'radio\', 0, NULL, \'\', \'1\', 2, 2, 2, 1, 150, 1, 2, 1, \'\', \'\');';
+( ' . $data['id'] . ', \'ID\', \'id\', \'int\', 11, 2, 1, 1, 1, \'自增ID\', 1, \'hidden\', 0, NULL, \'\', \' \', 2, 1, 1, 1, 150, 1, 2, 1, \'\', \'\'),
+( ' . $data['id'] . ', \'状态\', \'status\', \'tinyint\', 4, 1, 2, 2, 100, \'状态：1=开启，2=关闭\', 1, \'radio\', 0, NULL, \'\', \'1\', 2, 2, 2, 1, 150, 1, 2, 1, \'\', \'\');';
                 Db::execute($sql);
 
                 //向model_operate表写入相应记录
@@ -187,7 +188,11 @@ CLASS;
 (\'del_' . $model_name . '\', \'删除' . $data['label'] . '\', \'/' . $model_name . '/del\', ' . $data['id'] . ', \'del\', 1),
 (\'set_' . $model_name . '_status\', \'设置' . $data['label'] . '状态\', \'/' . $model_name . '/setStatus\', ' . $data['id'] . ', \'status\', 1),
 (\'get_' . $model_name . '_detail\', \'查看' . $data['label'] . '详情\', \'/' . $model_name . '/getDetail\', ' . $data['id'] . ', \'detail\', 1),
-(\'get_' . $model_name . '_category\', \'获取' . $data['label'] . '目录\', \'/category/tree\', ' . $data['id'] . ', \'category\', 1);
+(\'get_' . $model_name . '_format\', \'获取格式化' . $data['label'] . '下拉目录\', \'/' . $model_name . '/format\', ' . $data['id'] . ', \'detail\', 1),
+(\'show_add_' . $model_name . '_btn\', \'显示添加' . $data['label'] . '按钮\', \'#\', ' . $data['id'] . ', \'display\', 1),
+(\'do_' . $model_name . '_upload\', \'执行' . $data['label'] . '上传\', \'/' . $model_name . '/upload\', ' . $data['id'] . ', \'upload\', 1),
+(\'do_' . $model_name . '_import\', \'执行' . $data['label'] . '导入\', \'/' . $model_name . '/importData\', ' . $data['id'] . ', \'import\', 1),
+(\'get_' . $model_name . '_category\', \'获取' . $data['label'] . '目录\', \'/categories/tree\', ' . $data['id'] . ', \'category\', 1);
 ';
                 Db::execute($sql);
 

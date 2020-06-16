@@ -99,6 +99,8 @@ class ModelFieldService extends BaseService
             $is_add_index = false;
             $index_sql = '';
 
+            $data['length'] = trim($data['length']);
+
             if(!empty($data['id'])){
                 //修改表字段信息
                 $index_res = Db::name($table_name)->query('SHOW INDEX FROM '.$this->prefix . $table_name.';');
@@ -157,25 +159,40 @@ class ModelFieldService extends BaseService
             $is_signed = '';
             $data['is_signed'] == 2 && in_array(strtolower($data['type']),['tinyint','smallint','int','bigint','float','double']) &&  $is_signed = 'unsigned';
             //是否为空
-            $is_null = $data['is_null'] == 2 ? 'NOT NULL' : '';
+            $is_null = $data['is_null'] == 2 ? 'NOT NULL' : 'NULL';
             //默认值
             $default = $data['is_auto_increment'] == 1 ? 'AUTO_INCREMENT' : 'DEFAULT \''. trim($data['form_default']) .'\'';
             //是否自增
             $data['is_auto_increment'] != 1 && in_array(strtolower($data['type']),['tinyint','smallint','int','bigint','float','double']) && empty(trim($data['form_default'])) && $default = 'DEFAULT \'0\'';
 
-            $field_sql = '`'.$data['field_name'].'` '.$data['type'].'('.$data['length'].') ' . $is_signed . ' ' . $is_null.' '.$default.' COMMENT \'' . $data['note'] . '\';';
+            $len = $data['length'] > 0 ? '('.$data['length'].') ' : ' ';
+            if(($data['length'] > 0 || $data['decimal_length'] > 0) && in_array(strtolower($data['type']),['decimal','float','double'])){
+                $len = '('.$data['length'] . ',' . $data['decimal_length'] .') ';
+            }
+
+            $field_sql = '`'.$data['field_name'].'` '.$data['type']. $len . $is_signed . ' ' . $is_null.' '.$default.' COMMENT \'' . $data['note'] . '\';';
             //枚举类型字段
             strtolower($data['type']) == 'enum' && $field_sql = '`'.$data['field_name'].'` enum(' . $data['enum_content'] . ') ' . $default . ' COMMENT \''. $data['note'] .'\';';
 
-            $sql .= $field_sql;
+            $sql .= ' COLUMN ' . $field_sql;
+            Db::execute($sql);
+            if(isset($data['form_type']) && $data['form_type'] == 'img' && empty($data['id'])){
+                $sql = $alter_table . $action . ' COLUMN `thumb_'.$data['field_name'].'` '.$data['type']. $len.' NOT NULL DEFAULT \'\' COMMENT \''.$data['note'].'缩略图\';';
+                Db::execute($sql);
 
-            !empty($sql) && Db::execute($sql);
+                $sql = $alter_table . $action . ' COLUMN `middle_'.$data['field_name'].'` '.$data['type']. $len.' NOT NULL DEFAULT \'\' COMMENT \''.$data['note'].'缩略图\';';
+                Db::execute($sql);
+
+            }
+
+
 
             if($is_add_index){
                 $data['is_index'] == 1 && $index_sql .= $alter_table . ' ADD INDEX `'.$data['field_name'].'` (`'.$data['field_name'].'`); ';
                 $data['is_unique'] == 1 && $index_sql = $alter_table . ' ADD UNIQUE INDEX `'.$data['field_name'].'` (`'.$data['field_name'].'`); ';
                 $data['is_primary_key'] == 1 && $index_sql .= $alter_table . ' ADD PRIMARY KEY (`'.$data['field_name'].'`); ';
             }
+
 
             !empty($index_sql) && Db::execute($index_sql);
 
@@ -199,6 +216,21 @@ class ModelFieldService extends BaseService
 
             $table_name = model('AuthModelService','service')->getModelTableName($data['model_id']);
             Db::execute('ALTER TABLE ' . $this->prefix . $table_name .'  DROP  '.$data['field_name']);
+            if($data['form_type'] == 'img'){
+                //清除缩略图字段 thumb_, middle_
+                $old_data = Db::name('model_field')
+                    ->field_name('id,field_name')
+                    ->where('model_id',$data['model_id'])
+                    ->whereIn('field_name',['thumb_'.$data['field_name'], 'middle_'.$data['field_name']])
+                    ->select();
+
+                if(!empty($old_data)){
+                    foreach ($old_data as $field_val){
+                        Db::execute('ALTER TABLE ' . $this->prefix . $table_name .'  DROP '.$field_val['field_name']);
+                        Db::name('model_field')->where('id',$field_val['id'])->delete();
+                    }
+                }
+            }
 
             //根据字段ID删除字段选项表中相关值
             Db::name('field_option')->where('model_field_id',$data['id'])->delete();
@@ -237,10 +269,11 @@ class ModelFieldService extends BaseService
                 $data[$key]['label'] = $val['label']; //字段显示名称
                 $data[$key]['sortable'] = true; //是否有排序功能
                 $data[$key]['width'] = $val['column_width']; //列宽度
+                $data[$key]['length'] = $val['length']; //字段长度
                 $data[$key]['data_form'] = (!empty($val['form_type']) && $val['form_type'] != 'hidden') ? true : false; //是否为数据表单
-                $val['is_null'] == 2 && $data[$key]['data_form'] && $val['is_auto_increment'] == 2 && $data[$key]['validate'] = [
-                     [ 'required' => true, 'message' => '表单必填', 'trigger' => 'blur' ]
-                 ]; //表单验证规则
+                //表单验证规则
+                $val['is_null'] == 2 && $data[$key]['data_form'] && $val['is_auto_increment'] == 2 && $data[$key]['validate'] = true;
+
                 $data[$key]['show'] = $val['is_show'] == 1 ? true : false; //是否在列表中显示
                 $data[$key]['fixed'] = $val['is_fixed'] == 1 ? true : false; //是否固定列
                 $data[$key]['filter'] = $val['is_filter'] == 1 ? true : false; //是否固定列
@@ -251,6 +284,8 @@ class ModelFieldService extends BaseService
                 $data[$key]['filter_url'] = url('ModelField/getRelationOptions','',true,true);
                 $data[$key]['model_id'] = $val['model_id'];
                 $data[$key]['relation_model_id'] = $val['relation_model_id'];
+                $data[$key]['field_type'] = $val['type'];
+                $data[$key]['is_disabled'] = $val['is_disabled'] == 1 ? true : false;
 
                 //如果是文件类型，设置可上传扩展名
                 if($val['form_type'] == 'image' || $val['form_type'] == 'img' ){
@@ -262,7 +297,7 @@ class ModelFieldService extends BaseService
                 //默认值处理
                 if(in_array($val['type'],['tinyint','smallint','int','bigint'])){
                     $data[$key]['default'] = intval(trim($val['form_default']));
-                }else if($val['type'] == 'float'){
+                }else if(in_array($val['type'],['float','decimal'])){
                     $data[$key]['default'] = floatval(trim($val['form_default']));
                 }else if($val['type'] == 'double'){
                     $data[$key]['default'] = doubleval(trim($val['form_default']));
@@ -270,18 +305,44 @@ class ModelFieldService extends BaseService
                     $data[$key]['default'] = trim($val['form_default']);
                 }
 
+                if($val['form_type'] == 'checkbox'){
+                    $data[$key]['default'] = explode(',', $val['form_default']);
+                }else if(in_array($val['form_type'],['date','datetime']) && $val['type'] == 'int'){
+                    if(empty($data[$key]['default'])){
+                        $data[$key]['default'] = '';
+                    }else if(is_numeric($data[$key]['default'])){
+                        $format_str = $val['form_type'] == 'date' ? 'Y-m-d' : 'Y-m-d H:i:s';
+                        $data[$key]['default'] = date($format_str, $data[$key]['default']);
+                    }
+                }
 
+                $is_tree= model('AuthModel')->where('id',$val['relation_model_id'])->value('is_tree');
+                $data[$key]['is_tree'] = $is_tree == 10 ? true : false;
 
-                if($val['form_type'] == 'select' || $val['form_type'] == 'radio'){
+                if($val['form_type'] == 'select' || $val['form_type'] == 'radio' || $val['form_type'] == 'checkbox'){
                     if($val['relation_field_id']){  //有关联字段的,取关联模型的列表
                         $relation_field = $this->model->where('id',$val['relation_field_id'])->value('field_name');
                         $relation_field_label = $this->model->where('is_label',1)->where('model_id',$val['relation_model_id'])->value('field_name');
                         if(empty($relation_field) || empty($relation_field_label)) throw new Exception('关联字段错误！');
                         $table_name = model('AuthModel')->where('id',$val['relation_model_id'])->value('model_name');
                         $table_name = getModelTableName($table_name);
-                        $db_query = Db::name($table_name)->where('status',1);
-                        !empty($val['relation_condition']) && $db_query->whereRaw($val['relation_condition']);
-                        $data[$key]['options'] = $db_query->column($relation_field_label,$relation_field);
+                        if(in_array($table_name,['auth_menu','categories']) && $data[$key]['is_tree'] == true){
+                            $tree = [];
+                            $options = []; //添加修改表单中使用
+                            $options_name = []; //列表中显示用
+                            format_tree($tree,$table_name);
+                            foreach ($tree as $v){
+                                $options["'".$v['id']."'"] = $v['label'];
+                                $options_name["'".$v['id']."'"] = $v['title'];
+                            }
+                            unset($tree);
+                            $data[$key]['options'] = $options;
+                            $data[$key]['options_name'] = $options_name;
+                        }else{
+                            $db_query = Db::name($table_name)->where('status',1);
+                            !empty($val['relation_condition']) && $db_query->whereRaw($val['relation_condition']);
+                            $data[$key]['options'] = $db_query->column($relation_field_label,$relation_field);
+                        }
                     }else{ //否则，从字段值选项模型中取
                         $data[$key]['options'] = model('FieldOption')
                             ->where('model_id',$val['model_id'])
@@ -289,6 +350,7 @@ class ModelFieldService extends BaseService
                             ->where('status',1)
                             ->column('option_label','option_value');
                     }
+
                 }
 
 
@@ -298,7 +360,7 @@ class ModelFieldService extends BaseService
                 'fields' => $data
             ];
         }catch (Exception $e){
-            throw new Exception($e->getMessage());
+            throw new Exception($e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine());
         }
     }
 
@@ -348,6 +410,20 @@ class ModelFieldService extends BaseService
         }catch (Exception $e){
             throw new Exception($e->getMessage());
         }
+    }
+
+
+    /**
+     * 根据关联模型取出关联模型的所有字段信息
+     *
+     * @param [type] $relation_model_id
+     * @return void
+     */
+    public function getRelationFieldOptions($relation_model_id){
+        return $this->model
+                ->where('status',1)
+                ->where('model_id',$relation_model_id)
+                ->column('label','id');
     }
 
 

@@ -13,7 +13,11 @@ class Index
 
 
     public function test(){
-        echo 'test';
+        $tree = [];
+        $options = [];
+        format_tree($tree,'categories');
+
+        dump($tree);
     }
 
 }

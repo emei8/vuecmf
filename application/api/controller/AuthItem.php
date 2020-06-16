@@ -70,12 +70,27 @@ class AuthItem extends Base
             Db::name('auth_item_menu')->where('item_name',$post['current_auth'])->delete();
 
             $data = [];
+            $pid_arr = [];
             foreach ($post['menu_list'] as $menu_id){
                 array_push($data,[
                     'item_name' => $post['current_auth'],
                     'menu_id' => $menu_id
                 ]);
+
+                $pid = Db::name('auth_menu')->where('id', $menu_id)->value('pid');
+                if(!in_array($pid,$post['menu_list'])){
+                    array_push($pid_arr,$pid);
+                }
             }
+
+            $pid_arr = array_unique($pid_arr);
+            foreach ($pid_arr as $menu_id){
+                array_push($data,[
+                    'item_name' => $post['current_auth'],
+                    'menu_id' => $menu_id
+                ]);
+            }
+
 
             Db::name('auth_item_menu')->insertAll($data);
 

@@ -50,7 +50,7 @@ class Menu extends Base
             $menu_data['nav_menu'] = $nav_menu_tree;
             reset($nav_menu_tree);
             $first_key = key($nav_menu_tree);
-            $menu_data['active'] = (string)$first_key;
+            $menu_data['active'] = strval($first_key);
             unset($nav_menu_tree);
 
             return api_return($menu_data);
