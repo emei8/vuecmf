@@ -15,12 +15,12 @@
                   </i-dropdown-menu>
                 </i-dropdown>
             </span>
-            <span v-else class="logo">VueCMF</span>
+            <span v-else class="logo">YOUNG <i>[ {{ lang }} ]</i></span>
         </div>
         <!-- logo end -->
 
         <!-- main-menu start -->
-        <div v-if="is_collapse" class="menu-nav">VueCMF</div>
+        <div v-if="is_collapse" class="menu-nav">YOUNG <i>[ {{ lang }} ]</i></div>
         <i-menu v-else
                 :active-name="active_menu_nav"
                 class="menu-nav"
@@ -43,6 +43,12 @@
               <i-dropdown-item>账号：{{ user.username }}</i-dropdown-item>
               <i-dropdown-item>角色：{{ user.role }}</i-dropdown-item>
 
+              <i-dropdown-item divided name="change_backend_en">切换到英语站后台</i-dropdown-item>
+              <i-dropdown-item name="change_backend_es">切换到西班牙语站后台</i-dropdown-item>
+
+              <i-dropdown-item divided><a href="/?lang=zh-cn" target="_blank">访问英语站中文版</a></i-dropdown-item>
+              <i-dropdown-item><a href="/?lang=zh-es" target="_blank">访问西班牙语站中文版</a></i-dropdown-item>
+
               <i-dropdown-item divided name="logout"> <i-icon type="md-power" /> 退出系统</i-dropdown-item>
           </i-dropdown-menu>
         </i-dropdown>
@@ -59,6 +65,7 @@ export default {
     name: 'vc-header',
     data() {
         return {
+            lang: '英语站',
             nav_menu: {},
             user:{}
         }
@@ -87,6 +94,14 @@ export default {
 
         })
 
+        that.$api.axios_request('/welcome/lang','get',{}).then(function (res) {
+            if (res.code == 0) {
+                that.lang = res.data.lang
+            } else {
+                that.$Message.error(res.msg);
+            }
+        })
+
     },
     methods: {
         userEvent(name){
@@ -109,6 +124,22 @@ export default {
                         that.$Message.error(data.msg)
                     }
                 });
+            }else if(name == 'change_backend_en'){
+                that.$api.axios_request('/welcome/lang','get',{lang:'en-us'}).then(function (res) {
+                    if (res.code == 0) {
+                        that.lang = res.data.lang
+                    } else {
+                        that.$Message.error(res.msg);
+                    }
+                })
+            }else if(name == 'change_backend_es'){
+                that.$api.axios_request('/welcome/lang','get',{lang:'es-mx'}).then(function (res) {
+                    if (res.code == 0) {
+                        that.lang = res.data.lang
+                    } else {
+                        that.$Message.error(res.msg);
+                    }
+                })
             }
         },
         getMenuRouter(side_menu,old_menu_data,side_menu_router){
@@ -270,12 +301,16 @@ export default {
     top: 50px !important;
     left:auto;
     right: 15px;
-    width:120px;
+    width:180px; text-align: left;
 }
 
 .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title{
     padding-top: 8px !important;
     padding-bottom: 8px !important;
+}
+
+.logo i, .menu-nav i{
+    font-style: normal; font-size: 12px; font-weight: 300;
 }
 
 </style>

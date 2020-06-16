@@ -5,6 +5,14 @@ import * as cookie from '@/utils/cookie'
 
 Vue.use(Router)
 
+/**
+ * 重写路由的push方法
+ */
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+    return routerPush.call(this, location).catch(error=> error)
+}
+
 function generateRoutesFromMenu (menu = [], routes = []) {
     if(menu == undefined) return routes
     menu = JSON.parse(menu)
@@ -71,6 +79,8 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from, next) => {
     //store.state.active_side_menu = store.state.navTabsData.currentNavTab = to.path.substr(1)
+
+    console.log(to.meta)
 
     let topId = to.meta.topId
     let id = to.meta.id

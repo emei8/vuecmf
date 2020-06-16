@@ -119,7 +119,7 @@ export default {
 
         clickTab(currentTabName){
             //this.$store.dispatch('setNavTabs',currentTab)
-
+            console.log('$router = ', this.$router)
             this.$router.push({ path:currentTabName })
 
             this.$emit('on-rest-side-menu-select')
@@ -150,14 +150,14 @@ export default {
             })
 
             this.$emit('on-rest-side-menu-select')
-            
+
         },
         refresh(){
            this.reload()
         },
         fullScreen(){
             let el = document.documentElement;
-            let rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;      
+            let rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
             if(typeof rfs != "undefined" && rfs) {
                 rfs.call(el);
             }
@@ -211,7 +211,7 @@ export default {
 }
 
 .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
-    line-height: 24px; 
+    line-height: 24px;
 }
 
 .nav-tabs-btn{

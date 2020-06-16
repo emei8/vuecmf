@@ -7,9 +7,13 @@
             </div>
 
             <div class="list_box">
+
                 <vuecmf-table
                         ref="vcTable"
                         :server="serverUrl"
+                        :import-server="importUrl"
+                        :upload-file-server="uploadUrl"
+                        :upload-file-max-size="uploadFileMaxSize"
                         page="page"
                         :limit="20"
                         @on-add="save"
@@ -24,10 +28,12 @@
                         :editor-config="editorConfig"
                         :width="width"
                         :height="height"
+                        :form-tabs="formTabs"
 
                         model-width="80%"
                         model-height="90%"
-                ></vuecmf-table>
+                >
+                </vuecmf-table>
             </div>
         </div>
 
@@ -52,13 +58,18 @@
         },
         data() {
             return {
+                formTabs: [], //表单标签页
+                current_id: '',
                 category: [],
                 height: 300,
                 width: 800,
                 serverUrl: '',
+                uploadUrl: '', //表单上传文件地址
+                importUrl: '', //表单导入数据地址
+                uploadFileMaxSize: 5120, //最大可上传文件大小 KB
                 editorConfig: {
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
-                    UEDITOR_HOME_URL: '/public/NEditor/',
+                    UEDITOR_HOME_URL: 'NEditor/',  //打包后使用 /public/NEditor/
                     // 编辑器不自动被内容撑高
                     autoHeightEnabled: false,
                     // 初始容器高度
@@ -82,6 +93,8 @@
         },
         created(){
             this.serverUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.list)
+            this.uploadUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.upload)
+            this.importUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.import)
         },
         mounted(){
             this.title = this.$route.name
@@ -123,17 +136,22 @@
         },*/
         methods: {
             selectCategory: function(data,current){
-                this.$refs.vcTable.filterForm[this.$route.meta.filter_field] = current.id
-                this.$refs.vcTable.dataForm[""+this.$route.meta.filter_field+""] = current.id
+                this.current_id = current.id
                 this.$refs.vcTable.currentPage = 1
-                this.$refs.vcTable.refresh()
+                this.$refs.vcTable.filterForm[this.$route.meta.filter_field] = current.id
+                this.$refs.vcTable.cid = current.id
+                this.$refs.vcTable.refresh(current.id)
+               // this.$refs.vcTable.dataForm[""+this.$route.meta.filter_field+""] = current.id
+
             },
             save: function (form_data) {
                 let that = this
+
                 that.$api.request(that.$route.meta.model,that.$route.meta.permission.save,'post',form_data).then(function(res){
                     if(res.code == 0){
                         that.$Message.success(res.msg)
                         that.$refs.vcTable.refresh()
+                        that.$refs.vcTable.dataForm[""+that.$route.meta.filter_field+""] = that.current_id
                     }else{
                         that.$Message.error(res.msg);
                     }
@@ -145,6 +163,7 @@
                 that.$api.request(that.$route.meta.model,that.$route.meta.permission.del,'post',form_data).then(function(res){
                     if(res.code == 0){
                         that.$Message.success(res.msg)
+                        that.$refs.vcTable.currentPage = 1
                         that.$refs.vcTable.refresh()
                     }else{
                         that.$Message.error(res.msg);

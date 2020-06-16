@@ -17,8 +17,7 @@
 
             </div>
             <div class="login-bottom">
-                <!--<a href="javascript:void(0)" @click="forget">忘记密码</a>-->
-                测试账号：test   密码：123456
+                <a href="javascript:void(0)" @click="forget">忘记密码</a>
             </div>
         </div>
         <div class="copyright">

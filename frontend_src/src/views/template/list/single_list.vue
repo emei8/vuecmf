@@ -3,13 +3,16 @@
         <vuecmf-table
                 ref="vcTable"
                 :server="serverUrl"
+                :import-server="importUrl"
+                :upload-file-server="uploadUrl"
+                :upload-file-max-size="uploadFileMaxSize"
                 page="page"
                 :limit="20"
                 @on-add="save"
                 @on-edit="save"
                 @on-del="del"
-                :show-del-btn="true"
-                :show-edit-btn="true"
+                :show-del-btn="show_del_btn"
+                :show-edit-btn="show_edit_btn"
                 :show-add-btn="show_add_btn"
                 :operate-width="150"
                 :form-label-width="100"
@@ -18,9 +21,10 @@
                 :height="height"
                 model-width="80%"
                 model-height="90%"
+                :form-tabs="formTabs"
         >
             <template v-slot:headerAction="">
-                <i-button v-has="'show_add_single_btn'"  type="primary"><i-icon type="md-add-circle" /> 测试权限</i-button>
+                <!--<i-button v-has="'show_add_single_btn'"  type="primary"><i-icon type="md-add-circle" /> 测试权限</i-button>-->
             </template>
         </vuecmf-table>
     </div>
@@ -38,14 +42,20 @@
         },
         data() {
             return {
+                formTabs: [], //表单标签页
                 height: 300,
                 width: 800,
                 serverUrl: '',
+                uploadUrl: '', //表单上传文件地址
+                importUrl: '', //表单导入数据地址
+                uploadFileMaxSize: 5120, //最大可上传文件大小 KB
                 show_add_btn: true,
+                show_edit_btn: true,
+                show_del_btn: true,
                 serverAxios: axios,
                 editorConfig: {
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
-                    UEDITOR_HOME_URL: '/public/NEditor/',
+                    UEDITOR_HOME_URL: 'NEditor/',  //   /public/NEditor/
                     // 编辑器不自动被内容撑高
                     autoHeightEnabled: false,
                     // 初始容器高度
@@ -69,6 +79,8 @@
         },
         created(){
             this.serverUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.list)
+            this.uploadUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.upload)
+            this.importUrl = this.$api.getUrl(this.$route.meta.model,this.$route.meta.permission.import)
             console.log('list=' + this.serverUrl)
         },
         mounted(){
@@ -78,10 +90,32 @@
             this.title = this.$route.name
             console.log(this.$route.meta.permission)
 
-            this.show_add_btn = this.$helper.getBtnAuth('show_add_single_btn',this.$route.meta.permission)
+            let model_name = this.$route.meta.model.replace('_model','')
+            this.show_add_btn = this.$helper.getBtnAuth('show_add_' + model_name + '_btn',this.$route.meta.permission)
 
+            if(typeof this.$route.meta.permission.save == "undefined"){
+                this.show_edit_btn = false
+            }
+
+            if(typeof this.$route.meta.permission.del == "undefined"){
+                this.show_del_btn = false
+            }
 
             utils.resizeMain(this, this.side_collapse)
+
+            if('single_list' == model_name){
+                this.formTabs[0] = []
+                this.formTabs[0]['tab_name'] = '基本信息';
+                this.formTabs[0]['tab_fields'] = ['title','tag','status'];
+                this.formTabs[1] = []
+                this.formTabs[1]['tab_name'] = '内容';
+                this.formTabs[1]['tab_fields'] = ['detail'];
+            }else if('collect' == model_name){
+                this.show_edit_btn = false
+                this.show_del_btn = false
+            }
+            
+            
 
         },
         /*updated(){

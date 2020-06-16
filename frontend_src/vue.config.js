@@ -7,7 +7,7 @@ const postcss = px2rem({
 
 module.exports = {
     publicPath : './',
-    outputDir : '../public/admin',  //前端打包发布后的文件存放目录
+    outputDir : 'web',
     indexPath : 'index.html',
     assetsDir : 'static',
     lintOnSave : true, //eslint-loader 会将 lint 错误输出为编译警告
@@ -16,7 +16,7 @@ module.exports = {
     devServer: { //api代理
         proxy: {
             '/api': {
-                target: 'http://www.vuecmf.local',
+                target: 'http://www.iqmall.com',
                 ws: true,
                 changeOrigin: true
             }

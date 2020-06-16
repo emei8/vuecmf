@@ -21,11 +21,11 @@
                         <template v-else>
                             <i-row :key="index">
                                 <i-form-item :label="item.title"  :prop="item.prop" >
-                                    <i-select  style="width:200px"  v-model="dataForm[item.prop]" filterable  placeholder="请选择" v-if=" item.data_type == 'select' ">
+                                    <i-select  style="width:200px"  v-model="dataForm[item.prop]" filterable  clearable  placeholder="请选择" v-if=" item.data_type == 'select' ">
                                         <template v-for="(option_item,option_index) in item.options">
                                             <i-option  v-if=" typeof option_item == 'object' "
                                                       :key="option_index"
-                                                      :value="option_item.id">{{ option_item.label }}</i-option>
+                                                       :value="option_item.id">{{ option_item.label }}</i-option>
                                             <i-option v-else
                                                       :key="option_index"
                                                       :value="parseInt(option_index)">{{ option_item }}</i-option>
@@ -36,6 +36,7 @@
                                     <i-date-picker
                                             v-else-if=" item.data_type == 'date' "
                                             v-model="dataForm[item.prop]"
+                                            clearable
                                             type="date"
                                             format="yyyy-MM-dd"
                                             placeholder=""
@@ -48,6 +49,7 @@
                                             v-else-if=" item.data_type == 'datetime' "
                                             v-model="dataForm[item.prop]"
                                             type="datetime"
+                                            clearable
                                             format="yyyy-MM-dd HH:mm:ss"
                                             placeholder=""
                                             @on-change="(datetime) =>{ changeDatetime(datetime,item.prop)}"
@@ -55,7 +57,7 @@
                                     >
                                     </i-date-picker>
 
-                                    <i-radio-group  v-else-if=" item.data_type == 'radio' "  v-model="dataForm[item.prop]">
+                                    <i-radio-group  v-else-if=" item.data_type == 'radio' "  v-model="dataForm[item.prop]" >
                                         <template v-for="(option_item,option_index) in item.options">
                                             <i-radio :key="parseInt(option_index)" :label="parseInt(option_index)" v-if=" /^\d+$/.test(option_index) "><span>{{ option_item }}</span></i-radio>
                                             <i-radio :key="parseInt(option_index)" :label="parseFloat(option_index)" v-else-if=" /^\d+\.+\d+$/.test(option_index) "><span>{{ option_item }}</span></i-radio>
@@ -63,9 +65,9 @@
                                         </template>
                                     </i-radio-group>
 
-                                    <i-input v-model="dataForm[item.prop]" type="textarea" :rows="4" :placeholder="'请输入' + item.title" v-else-if=" item.data_type == 'textarea' "></i-input>
+                                    <i-input v-model="dataForm[item.prop]" type="textarea" clearable :rows="4" :placeholder="'请输入' + item.title" v-else-if=" item.data_type == 'textarea' " ></i-input>
 
-                                    <i-input v-model="dataForm[item.prop]" :placeholder="'请输入' + item.title" v-else ></i-input>
+                                    <i-input v-model="dataForm[item.prop]" clearable :placeholder="'请输入' + item.title" v-else ></i-input>
                                 </i-form-item>
 
                             </i-row>
@@ -91,6 +93,7 @@
     .ivu-modal-body{ height: calc(100% - 120px) !important;}
     .ivu-modal-body{ overflow: auto ;}
     .ivu-input-wrapper{ width: 98% !important;}
+    .ivu-select-item{ padding: 2px 16px !important;}
 </style>
 
 

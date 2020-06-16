@@ -18,8 +18,11 @@
                 :height="height"
                 model-width="80%"
                 model-height="90%"
+                :form-tabs="formTabs"
         >
-
+            <template v-slot:headerAction="">
+                <i-button v-has="'show_add_single_btn'"  type="primary"><i-icon type="md-add-circle" /> 测试权限</i-button>
+            </template>
         </vuecmf-table>
     </div>
 </template>
@@ -36,6 +39,7 @@
         },
         data() {
             return {
+                formTabs: [], //表单标签页
                 height: 300,
                 width: 800,
                 serverUrl: '',
@@ -43,7 +47,7 @@
                 serverAxios: axios,
                 editorConfig: {
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
-                    UEDITOR_HOME_URL: '/public/NEditor/',
+                    UEDITOR_HOME_URL: 'NEditor/',
                     // 编辑器不自动被内容撑高
                     autoHeightEnabled: false,
                     // 初始容器高度
@@ -77,7 +81,6 @@
             console.log(this.$route.meta.permission)
 
             this.show_add_btn = this.$helper.getBtnAuth('show_add_model_btn',this.$route.meta.permission)
-
 
             utils.resizeMain(this, this.side_collapse)
 

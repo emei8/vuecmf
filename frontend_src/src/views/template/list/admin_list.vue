@@ -16,6 +16,7 @@
                 :editor-config="editorConfig"
                 :width="width"
                 :height="height"
+                :form-tabs="formTabs"
                 model-width="80%"
                 model-height="90%"
         >
@@ -54,6 +55,7 @@
         },
         data() {
             return {
+                formTabs: [], //表单标签页
                 roleTree:[],
                 roleColumns: [],
                 currentUser: '',
@@ -68,7 +70,7 @@
                 serverAxios: axios,
                 editorConfig: {
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
-                    UEDITOR_HOME_URL: '/public/NEditor/',
+                    UEDITOR_HOME_URL: 'NEditor/',
                     // 编辑器不自动被内容撑高
                     autoHeightEnabled: false,
                     // 初始容器高度
