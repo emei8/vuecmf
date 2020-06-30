@@ -4,6 +4,7 @@
 const postcss = px2rem({
     remUnit: 16   //基准大小 baseSize，需要和rem.js中相同
 })*/
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     publicPath : './',
@@ -16,13 +17,23 @@ module.exports = {
     devServer: { //api代理
         proxy: {
             '/api': {
-                target: 'http://www.iqmall.com',
+                target: 'http://www.vuecmf.local',
                 ws: true,
                 changeOrigin: true
             }
         }
     },
     configureWebpack: {
+		// 打包去掉console 必须引入TerserPlugin
+        optimization: {
+            minimizer: [new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        drop_console: true
+                    }
+                }
+            })]
+        },
         module: {
             rules: [{
                   test: /\.css$/,

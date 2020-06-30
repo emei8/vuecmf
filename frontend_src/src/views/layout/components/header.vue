@@ -15,12 +15,12 @@
                   </i-dropdown-menu>
                 </i-dropdown>
             </span>
-            <span v-else class="logo">YOUNG <i>[ {{ lang }} ]</i></span>
+            <span v-else class="logo">VueCMF</span>
         </div>
         <!-- logo end -->
 
         <!-- main-menu start -->
-        <div v-if="is_collapse" class="menu-nav">YOUNG <i>[ {{ lang }} ]</i></div>
+        <div v-if="is_collapse" class="menu-nav">VueCMF</div>
         <i-menu v-else
                 :active-name="active_menu_nav"
                 class="menu-nav"
@@ -42,13 +42,6 @@
           <i-dropdown-menu slot="list">
               <i-dropdown-item>账号：{{ user.username }}</i-dropdown-item>
               <i-dropdown-item>角色：{{ user.role }}</i-dropdown-item>
-
-              <i-dropdown-item divided name="change_backend_en">切换到英语站后台</i-dropdown-item>
-              <i-dropdown-item name="change_backend_es">切换到西班牙语站后台</i-dropdown-item>
-
-              <i-dropdown-item divided><a href="/?lang=zh-cn" target="_blank">访问英语站中文版</a></i-dropdown-item>
-              <i-dropdown-item><a href="/?lang=zh-es" target="_blank">访问西班牙语站中文版</a></i-dropdown-item>
-
               <i-dropdown-item divided name="logout"> <i-icon type="md-power" /> 退出系统</i-dropdown-item>
           </i-dropdown-menu>
         </i-dropdown>
@@ -65,7 +58,6 @@ export default {
     name: 'vc-header',
     data() {
         return {
-            lang: '英语站',
             nav_menu: {},
             user:{}
         }
@@ -92,14 +84,6 @@ export default {
 
             }
 
-        })
-
-        that.$api.axios_request('/welcome/lang','get',{}).then(function (res) {
-            if (res.code == 0) {
-                that.lang = res.data.lang
-            } else {
-                that.$Message.error(res.msg);
-            }
         })
 
     },

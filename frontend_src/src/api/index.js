@@ -42,6 +42,8 @@ export function getUrl(model_name,action_name) {
             return baseUrl + api_map[model_name]['actions'][action_name].path  + '?token=' + cookie.get('token')
         })
     }else{
+        console.log(action_name)
+        console.log(api_map[model_name]['actions'])
         return  baseUrl + api_map[model_name]['actions'][action_name].path  + '?token=' + cookie.get('token')
     }
 

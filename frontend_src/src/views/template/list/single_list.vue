@@ -63,7 +63,8 @@
                     // 初始容器宽度
                     initialFrameWidth: '100%',
                     // 关闭自动保存
-                    enableAutoSave: false
+                    enableAutoSave: false,
+                    zIndex: 9000
                 }
             };
         },
