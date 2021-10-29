@@ -1,32 +1,56 @@
-#欢迎使用VueCMF
+ThinkPHP 6.0
+===============
 
-## VueCMF是什么？
-VueCMF是一款完全开源免费的内容管理快速开发框架，采用BSD开源协议发布。前端采用VueJS、后端基于ThinkPHP5.1开发(根据后端API返回的JSON数据结构，也可使用Java、Python、C#等语言开发后端API)，界面使用的是iview UI组件库。可用于快速开发CMS、CRM、WMS、OMS、ERP等功能强大的后台管理系统，开发简单、高效易用，极大减少系统的开发周期和研发成本！
-不用写一行代码即可创建列表管理（含有列表查询、添加、修改、删除、导入和导出数据等功能）。
+> 运行环境要求PHP7.1+，兼容PHP8.0。
 
-VueCMF开发框架主要有以下功能：
+[官方应用服务市场](https://market.topthink.com) | [`ThinkAPI`——官方统一API服务](https://docs.topthink.com/think-api)
 
- + 菜单管理
- + 模型管理
- + 管理员管理
- + 角色与权限管理
+ThinkPHPV6.0版本由[亿速云](https://www.yisu.com/)独家赞助发布。
 
+## 主要新特性
 
-## 环境要求
-* Apache/Nginx
-* MySQL >= 5.0
-* PHP >= 7.0
+* 采用`PHP7`强类型（严格模式）
+* 支持更多的`PSR`规范
+* 原生多应用支持
+* 更强大和易用的查询
+* 全新的事件系统
+* 模型事件和数据库事件统一纳入事件系统
+* 模板引擎分离出核心
+* 内部功能中间件化
+* SESSION/Cookie机制改进
+* 对Swoole以及协程支持改进
+* 对IDE更加友好
+* 统一和精简大量用法
 
+## 安装
 
-## 使用文档
+~~~
+composer create-project topthink/think tp 6.0.*
+~~~
 
-+ [使用手册(http://www.vuecmf.com)](http://www.vuecmf.com/help) 
+如果需要更新框架使用
+~~~
+composer update topthink/framework
+~~~
 
+## 文档
 
-## Donation
-If you like the project, I hope you donate this project so that the project will get better development, 
-Thank you.
+[完全开发手册](https://www.kancloud.cn/manual/thinkphp6_0/content)
 
-Alipay：
+## 参与开发
 
- ![image](http://www.vuecmf.com/static/vuecmf_alipay.png)
+请参阅 [ThinkPHP 核心框架包](https://github.com/top-think/framework)。
+
+## 版权信息
+
+ThinkPHP遵循Apache2开源协议发布，并提供免费使用。
+
+本项目包含的第三方源码和二进制文件之版权信息另行标注。
+
+版权所有Copyright © 2006-2020 by ThinkPHP (http://thinkphp.cn)
+
+All rights reserved。
+
+ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
+
+更多细节参阅 [LICENSE.txt](LICENSE.txt)
