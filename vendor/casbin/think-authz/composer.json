@@ -1,0 +1,53 @@
+{
+    "name": "casbin/think-authz",
+    "keywords": [
+        "thinkphp",
+        "casbin",
+        "permission",
+        "access-control",
+        "authorization",
+        "rbac",
+        "acl",
+        "abac",
+        "authz"
+    ],
+    "description": "An authorization library that supports access control models like ACL, RBAC, ABAC in ThinkPHP 6. ",
+    "authors": [
+        {
+            "name": "TechLee",
+            "email": "techlee@qq.com"
+        }
+    ],
+    "license": "Apache-2.0",
+    "require": {
+        "casbin/casbin": "~3.0",
+        "topthink/framework": "^6.0.0",
+        "topthink/think-migration": "^3.0",
+        "casbin/psr3-bridge": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0|~8.0|~9.0",
+        "php-coveralls/php-coveralls": "^2.1",
+        "topthink/think": "^6.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "tauthz\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tauthz\\tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "think": {
+            "services": [
+                "tauthz\\TauthzService"
+            ]
+        }
+    }
+}
