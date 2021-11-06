@@ -89,13 +89,13 @@ class CreateRulesTable extends Migrator
     {
         $default = config('tauthz.default');
         $table = $this->table(config('tauthz.enforcers.'.$default.'.database.rules_name'));
-        $table->addColumn('ptype', 'string', ['null' => true,'default' => '', 'comment'=>'类型：g=组或角色，p=策略'])
-            ->addColumn('v0', 'string', ['null' => true, 'default' => '', 'comment' => '对应定义的sub(用户名或角色名)'])
-            ->addColumn('v1', 'string', ['null' => true, 'default' => '', 'comment' => '对应定义的dom(应用名)'])
-            ->addColumn('v2', 'string', ['null' => true, 'default' => '', 'comment' => '对应定义的obj(控制器名)'])
-            ->addColumn('v3', 'string', ['null' => true, 'default' => '', 'comment' => '对应定义的act(操作名称)'])
-            ->addColumn('v4', 'string', ['null' => true, 'default' => '', 'comment' => '预留，暂用不到'])
-            ->addColumn('v5', 'string', ['null' => true, 'default' => '', 'comment' => '预留，暂用不到'])
+        $table->addColumn('ptype', 'string', ['length' => 4,'null' => false,'default' => '', 'comment'=>'类型：g=组或角色，p=策略'])
+            ->addColumn('v0', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的sub(用户名或角色名)'])
+            ->addColumn('v1', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的dom(应用名)'])
+            ->addColumn('v2', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的obj(控制器名)'])
+            ->addColumn('v3', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的act(动作名称)'])
+            ->addColumn('v4', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '预留，暂用不到'])
+            ->addColumn('v5', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '预留，暂用不到'])
             ->create();
     }
 

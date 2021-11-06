@@ -10,12 +10,28 @@ declare (strict_types = 1);
 
 namespace app\vuecmf\controller;
 
-use app\BaseController;
+use app\vuecmf\middleware\Auth;
+use app\vuecmf\middleware\DataCheck;
+use tauthz\facade\Enforcer;
 use think\facade\Session;
 use think\Request;
+use app\vuecmf\model\Admin as AdminModel;
 
-class Admin extends BaseController
+
+/**
+ * 管理员操作相关控制器
+ * Class Admin
+ * @package app\vuecmf\controller
+ */
+class Admin extends Base
 {
+    //login, logout不受权限控制
+    protected $middleware = [
+        //Auth::class => ['except' => ['login','logout']],
+        DataCheck::class
+    ];
+
+
     /**
      * 显示资源列表
      *
@@ -46,7 +62,34 @@ class Admin extends BaseController
      */
     public function save(Request $request)
     {
-        //
+        /*AdminModel::create([
+
+        ]);*/
+        $res = input('data.test');
+        echo $res;
+
+        // adds permissions to a user
+        //Enforcer::addPermissionForUser('eve', 'articles', 'read');
+
+        // adds permissions to a rule
+        //Enforcer::addPolicy('writer', 'admin','login', 'user');
+
+        //Enforcer::addRoleForUser('lily','reader','admin');
+
+        $p1 = Enforcer::getPermissionsForUser('lily');
+        $p2 = Enforcer::getImplicitPermissionsForUser('lily','admin');
+        dump($p1);
+        dump(['lily per',$p2]);
+
+        $res = Enforcer::enforce('lily', 'admin', 'login', 'user');
+        dump($res);
+        dump(Enforcer::getRolesForUser('lily','admin'));
+
+        dump(Enforcer::getPolicy());
+
+        event('CheckLogin', ['aaa','ccc']);
+
+        echo 'action save';
     }
 
     /**
@@ -57,7 +100,7 @@ class Admin extends BaseController
      */
     public function read($id)
     {
-        //
+        echo 'action read ' . $id;
     }
 
     /**

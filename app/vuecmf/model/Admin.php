@@ -8,18 +8,14 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\model;
 
-use app\BaseController;
-use app\vuecmf\middleware\Auth;
+use think\Model;
 
 /**
- * 需要授权访问的控制器基类
- * Class Base
- * @package app\vuecmf\controller
+ * @mixin \think\Model
  */
-abstract class Base extends BaseController
+class Admin extends Model
 {
-    //配置访问权限中间件
-    protected $middleware = [Auth::class];
+    //
 }

@@ -8,18 +8,8 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\subscribe;
 
-use app\BaseController;
-use app\vuecmf\middleware\Auth;
-
-/**
- * 需要授权访问的控制器基类
- * Class Base
- * @package app\vuecmf\controller
- */
-abstract class Base extends BaseController
+class AdminEvent
 {
-    //配置访问权限中间件
-    protected $middleware = [Auth::class];
 }
