@@ -13,16 +13,16 @@ class CreateRulesTable extends Migrator
     protected function init()
     {
         $options = $this->getDbConfig();
-    
+
         $adapter = AdapterFactory::instance()->getAdapter($options['adapter'], $options);
-    
+
         if ($adapter->hasOption('table_prefix') || $adapter->hasOption('table_suffix')) {
             $adapter = AdapterFactory::instance()->getWrapper('prefix', $adapter);
         }
-    
-        $this->setAdapter( $adapter);    
+
+        $this->setAdapter( $adapter);
     }
-    
+
     /**
      * 获取数据库配置
      * @return array
@@ -88,7 +88,7 @@ class CreateRulesTable extends Migrator
     public function up()
     {
         $default = config('tauthz.default');
-        $table = $this->table(config('tauthz.enforcers.'.$default.'.database.rules_name'));
+        $table = $this->table(config('tauthz.enforcers.'.$default.'.database.rules_name'), ['id' => true,  'comment'=>'系统--角色及权限表']);
         $table->addColumn('ptype', 'string', ['length' => 4,'null' => false,'default' => '', 'comment'=>'类型：g=组或角色，p=策略'])
             ->addColumn('v0', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的sub(用户名或角色名)'])
             ->addColumn('v1', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '对应定义的dom(应用名)'])
