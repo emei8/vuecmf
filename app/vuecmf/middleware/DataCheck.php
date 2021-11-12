@@ -1,4 +1,11 @@
 <?php
+// +----------------------------------------------------------------------
+// | Copyright (c) 2020~2021 http://www.vuecmf.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed ( https://github.com/emei8/vuecmf/blob/master/LICENSE )
+// +----------------------------------------------------------------------
+// | Author: emei8 <2278667823@qq.com>
+// +----------------------------------------------------------------------
 declare (strict_types = 1);
 
 namespace app\vuecmf\middleware;
@@ -6,6 +13,11 @@ namespace app\vuecmf\middleware;
 use think\exception\ValidateException;
 use think\Response;
 
+/**
+ * 数据校验
+ * Class DataCheck
+ * @package app\vuecmf\middleware
+ */
 class DataCheck
 {
     /**
