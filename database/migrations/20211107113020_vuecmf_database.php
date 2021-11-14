@@ -137,6 +137,7 @@ class VuecmfDatabase extends Migrator
             ->addColumn('last_login_ip', 'biginteger', ['length' => 20, 'null' => false, 'default' => 0, 'comment' => '最后登录IP'])
             ->addColumn('update_time', 'timestamp', ['null' => false, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '更新时间'])
             ->addColumn('token', 'string', ['null' => false, 'default' => '', 'comment' => 'api访问token'])
+            ->addColumn('status', 'integer', ['length' => 4, 'null' => false, 'default' => 10, 'comment' => '状态：10=开启，20=禁用'])
             ->addIndex(['username'], ['unique' => true])
             ->addIndex(['email'], ['unique' => true])
             ->addIndex(['mobile'], ['unique' => true])
@@ -155,7 +156,11 @@ class VuecmfDatabase extends Migrator
             // model_index 模型
             ['id' => 5, 'table_name' => 'model_index', 'label' => '模型索引', 'default_action_id' => 17, 'component_tpl' => 'template/list/category_list', 'search_field_id' => '', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型索引设置表', 'status' => 10],
             // model_relation 模型
-            ['id' => 6, 'table_name' => 'model_relation', 'label' => '模型关联', 'default_action_id' => , 'component_tpl' => 'template/list/category_list', 'search_field_id' => '', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型关联设置表', 'status' => 10],
+            ['id' => 6, 'table_name' => 'model_relation', 'label' => '模型关联', 'default_action_id' => 22, 'component_tpl' => 'template/list/category_list', 'search_field_id' => '54,55,56', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型关联设置表', 'status' => 10],
+            // menu 模型
+            ['id' => 7, 'table_name' => 'menu', 'label' => '菜单', 'default_action_id' => 27, 'component_tpl' => 'template/list/menu_tree', 'search_field_id' => '60,61', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--菜单表', 'status' => 10],
+            // admin 模型
+            ['id' => 8, 'table_name' => 'admin', 'label' => '管理员', 'default_action_id' => , 'component_tpl' => 'template/list/admin_list', 'search_field_id' => '', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--管理员表', 'status' => 10],
 
         ];
         $this->table('model')->insert($data)->save();
@@ -220,11 +225,33 @@ class VuecmfDatabase extends Migrator
             ['id' => 51, 'field_name' => 'model_field_id', 'label' => '模型字段', 'model_id' => 6, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '模型字段ID', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 51, 'status' => 10],
             ['id' => 52, 'field_name' => 'relation_model_id', 'label' => '关联模型', 'model_id' => 6, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联模型ID', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 52, 'status' => 10],
             ['id' => 53, 'field_name' => 'relation_field_id', 'label' => '关联模型字段', 'model_id' => 6, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联模型字段ID', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 53, 'status' => 10],
-            ['id' => 54, 'field_name' => 'relation_condition', 'label' => '关联条件', 'model_id' => 6, 'type' => 'varchar', 'length' => 6, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联条件', 'default_value' => '=', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 54, 'status' => 10],
-            ['id' => 55, 'field_name' => 'condition_type', 'label' => '条件类型', 'model_id' => 6, 'type' => 'varchar', 'length' => 10, 'decimal_length' => 0, 'is_null' => 20, 'note' => '条件类型', 'default_value' => 'and', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 55, 'status' => 10],
-            ['id' => 56, 'field_name' => 'join_type', 'label' => '连接类型', 'model_id' => 6, 'type' => 'varchar', 'length' => 24, 'decimal_length' => 0, 'is_null' => 20, 'note' => '连接类型', 'default_value' => 'left', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 56, 'status' => 10],
-            ['id' => 57, 'field_name' => 'relation_show_field_id', 'label' => '显示字段', 'model_id' => 6, 'type' => 'varchar', 'length' => 255, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联模型显示字段ID,多个逗号分隔，全部用*', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 57, 'status' => 10],
+            ['id' => 54, 'field_name' => 'relation_condition', 'label' => '关联条件', 'model_id' => 6, 'type' => 'varchar', 'length' => 6, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联条件', 'default_value' => '=', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 54, 'status' => 10],
+            ['id' => 55, 'field_name' => 'condition_type', 'label' => '条件类型', 'model_id' => 6, 'type' => 'varchar', 'length' => 10, 'decimal_length' => 0, 'is_null' => 20, 'note' => '条件类型', 'default_value' => 'and', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 55, 'status' => 10],
+            ['id' => 56, 'field_name' => 'join_type', 'label' => '连接类型', 'model_id' => 6, 'type' => 'varchar', 'length' => 24, 'decimal_length' => 0, 'is_null' => 20, 'note' => '连接类型', 'default_value' => 'left', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 56, 'status' => 10],
+            ['id' => 57, 'field_name' => 'relation_show_field_id', 'label' => '显示字段', 'model_id' => 6, 'type' => 'varchar', 'length' => 255, 'decimal_length' => 0, 'is_null' => 20, 'note' => '关联模型显示字段ID,多个逗号分隔，全部用*', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 57, 'status' => 10],
             ['id' => 58, 'field_name' => 'status', 'label' => '状态', 'model_id' => 6, 'type' => 'int', 'length' => 4, 'decimal_length' => 0, 'is_null' => 20, 'note' => '状态：10=开启，20=禁用', 'default_value' => 10, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 58, 'status' => 10],
+            //表 menu 字段
+            ['id' => 59, 'field_name' => 'id', 'label' => 'ID', 'model_id' => 7, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '自增ID', 'default_value' => 0, 'is_auto_increment' => 10, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 20, 'is_disabled' => 10, 'sort_num' => 59, 'status' => 10],
+            ['id' => 60, 'field_name' => 'title', 'label' => '菜单标题', 'model_id' => 7, 'type' => 'varchar', 'length' => 64, 'decimal_length' => 0, 'is_null' => 20, 'note' => '菜单标题', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 60, 'status' => 10],
+            ['id' => 61, 'field_name' => 'icon', 'label' => '菜单图标', 'model_id' => 7, 'type' => 'varchar', 'length' => 32, 'decimal_length' => 0, 'is_null' => 20, 'note' => '菜单图标', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 61, 'status' => 10],
+            ['id' => 62, 'field_name' => 'pid', 'label' => '父级', 'model_id' => 7, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '父级ID', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 62, 'status' => 10],
+            ['id' => 63, 'field_name' => 'model_id', 'label' => '模型', 'model_id' => 7, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '模型ID', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 63, 'status' => 10],
+            ['id' => 64, 'field_name' => 'sort_num', 'label' => '排序', 'model_id' => 7, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '菜单的排列顺序(小在前)', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 64, 'status' => 10],
+            ['id' => 65, 'field_name' => 'status', 'label' => '状态', 'model_id' => 7, 'type' => 'int', 'length' => 4, 'decimal_length' => 0, 'is_null' => 20, 'note' => '状态：10=开启，20=禁用', 'default_value' => 10, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 65, 'status' => 10],
+            //表 admin 字段
+            ['id' => 66, 'field_name' => 'id', 'label' => 'ID', 'model_id' => 8, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '自增ID', 'default_value' => 0, 'is_auto_increment' => 10, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 20, 'is_disabled' => 10, 'sort_num' => 66, 'status' => 10],
+            ['id' => 67, 'field_name' => 'username', 'label' => '用户名', 'model_id' => 8, 'type' => 'varchar', 'length' => 16, 'decimal_length' => 0, 'is_null' => 20, 'note' => '用户名', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 67, 'status' => 10],
+            ['id' => 68, 'field_name' => 'password', 'label' => '密码', 'model_id' => 8, 'type' => 'varchar', 'length' => 255, 'decimal_length' => 0, 'is_null' => 20, 'note' => '密码', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 20, 'is_fixed' => 20, 'column_width' => 0, 'is_filter' => 20, 'is_disabled' => 20, 'sort_num' => 68, 'status' => 10],
+            ['id' => 69, 'field_name' => 'email', 'label' => '邮箱', 'model_id' => 8, 'type' => 'varchar', 'length' => 64, 'decimal_length' => 0, 'is_null' => 20, 'note' => '邮箱', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 69, 'status' => 10],
+            ['id' => 70, 'field_name' => 'mobile', 'label' => '手机', 'model_id' => 8, 'type' => 'varchar', 'length' => 32, 'decimal_length' => 0, 'is_null' => 20, 'note' => '手机', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 70, 'status' => 10],
+            ['id' => 71, 'field_name' => 'is_super', 'label' => '超级管理员', 'model_id' => 8, 'type' => 'int', 'length' => 4, 'decimal_length' => 0, 'is_null' => 20, 'note' => '超级管理员：10=是，20=否', 'default_value' => 20, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 71, 'status' => 10],
+            ['id' => 72, 'field_name' => 'reg_time', 'label' => '注册时间', 'model_id' => 8, 'type' => 'timestamp', 'length' => 0, 'decimal_length' => 0, 'is_null' => 20, 'note' => '注册时间', 'default_value' => 'CURRENT_TIMESTAMP', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 72, 'status' => 10],
+            ['id' => 73, 'field_name' => 'reg_ip', 'label' => '注册IP', 'model_id' => 8, 'type' => 'bigint', 'length' => 20, 'decimal_length' => 0, 'is_null' => 20, 'note' => '注册IP', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 20, 'is_disabled' => 20, 'sort_num' => 73, 'status' => 10],
+            ['id' => 74, 'field_name' => 'last_login_time', 'label' => '最后登录时间', 'model_id' => 8, 'type' => 'timestamp', 'length' => 0, 'decimal_length' => 0, 'is_null' => 20, 'note' => '最后登录时间', 'default_value' => 'CURRENT_TIMESTAMP', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 74, 'status' => 10],
+            ['id' => 75, 'field_name' => 'last_login_ip', 'label' => '最后登录IP', 'model_id' => 8, 'type' => 'bigint', 'length' => 20, 'decimal_length' => 0, 'is_null' => 20, 'note' => '最后登录IP', 'default_value' => 0, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 20, 'is_disabled' => 20, 'sort_num' => 75, 'status' => 10],
+            ['id' => 76, 'field_name' => 'update_time', 'label' => '更新时间', 'model_id' => 8, 'type' => 'timestamp', 'length' => 0, 'decimal_length' => 0, 'is_null' => 20, 'note' => '更新时间', 'default_value' => 'CURRENT_TIMESTAMP', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 76, 'status' => 10],
+            ['id' => 77, 'field_name' => 'token', 'label' => '访问token', 'model_id' => 8, 'type' => 'varchar', 'length' => 255, 'decimal_length' => 0, 'is_null' => 20, 'note' => 'api访问token', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 77, 'status' => 10],
+            ['id' => 78, 'field_name' => 'status', 'label' => '状态', 'model_id' => 8, 'type' => 'int', 'length' => 4, 'decimal_length' => 0, 'is_null' => 20, 'note' => '状态：10=开启，20=禁用', 'default_value' => 10, 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 10, 'is_disabled' => 20, 'sort_num' => 78, 'status' => 10],
 
 
         ];
@@ -241,6 +268,10 @@ class VuecmfDatabase extends Migrator
             ['model_id' => 4, 'model_field_id' => '40,41', 'index_type' => 'UNIQUE'],
             //表 model_relation 索引
             ['model_id' => 6, 'model_field_id' => '51,53', 'index_type' => 'UNIQUE'],
+            //表 admin 索引
+            ['model_id' => 8, 'model_field_id' => '67', 'index_type' => 'UNIQUE'],
+            ['model_id' => 8, 'model_field_id' => '69', 'index_type' => 'UNIQUE'],
+            ['model_id' => 8, 'model_field_id' => '70', 'index_type' => 'UNIQUE'],
         ];
         $this->table('model_index')->insert($data)->save();
 
@@ -277,8 +308,24 @@ class VuecmfDatabase extends Migrator
             ['model_id' => 5, 'model_field_id' => 47, 'option_value' => 'NORMAL', 'option_label' => '常规'],
             ['model_id' => 5, 'model_field_id' => 47, 'option_value' => 'UNIQUE', 'option_label' => '唯一'],
             ['model_id' => 5, 'model_field_id' => 47, 'option_value' => 'FULLTEXT', 'option_label' => '全文'],
-
-
+            ['model_id' => 6, 'model_field_id' => 54, 'option_value' => '=', 'option_label' => '等于'],
+            ['model_id' => 6, 'model_field_id' => 54, 'option_value' => '>', 'option_label' => '大于'],
+            ['model_id' => 6, 'model_field_id' => 54, 'option_value' => '<', 'option_label' => '小于'],
+            ['model_id' => 6, 'model_field_id' => 54, 'option_value' => '>=', 'option_label' => '大于等于'],
+            ['model_id' => 6, 'model_field_id' => 54, 'option_value' => '<=', 'option_label' => '小于等于'],
+            ['model_id' => 6, 'model_field_id' => 55, 'option_value' => 'and', 'option_label' => '且'],
+            ['model_id' => 6, 'model_field_id' => 55, 'option_value' => 'or', 'option_label' => '或'],
+            ['model_id' => 6, 'model_field_id' => 56, 'option_value' => 'left', 'option_label' => '左连接'],
+            ['model_id' => 6, 'model_field_id' => 56, 'option_value' => 'right', 'option_label' => '右连接'],
+            ['model_id' => 6, 'model_field_id' => 56, 'option_value' => 'inner', 'option_label' => '内连接'],
+            ['model_id' => 6, 'model_field_id' => 58, 'option_value' => 10, 'option_label' => '开启'],
+            ['model_id' => 6, 'model_field_id' => 58, 'option_value' => 20, 'option_label' => '禁用'],
+            ['model_id' => 7, 'model_field_id' => 65, 'option_value' => 10, 'option_label' => '开启'],
+            ['model_id' => 7, 'model_field_id' => 65, 'option_value' => 20, 'option_label' => '禁用'],
+            ['model_id' => 8, 'model_field_id' => 71, 'option_value' => 10, 'option_label' => '是'],
+            ['model_id' => 8, 'model_field_id' => 71, 'option_value' => 20, 'option_label' => '否'],
+            ['model_id' => 8, 'model_field_id' => 78, 'option_value' => 10, 'option_label' => '开启'],
+            ['model_id' => 8, 'model_field_id' => 78, 'option_value' => 20, 'option_label' => '禁用'],
 
         ];
         $this->table('field_option')->insert($data)->save();
@@ -291,6 +338,11 @@ class VuecmfDatabase extends Migrator
             ['model_id' => 4, 'model_field_id' => 40, 'relation_model_id' => 3, 'relation_field_id' => 18, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '19,20'],
             ['model_id' => 5, 'model_field_id' => 45, 'relation_model_id' => 1, 'relation_field_id' => 1, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '2,3'],
             ['model_id' => 5, 'model_field_id' => 46, 'relation_model_id' => 3, 'relation_field_id' => 18, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '19,20'],
+            ['model_id' => 6, 'model_field_id' => 50, 'relation_model_id' => 1, 'relation_field_id' => 1, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '2,3'],
+            ['model_id' => 6, 'model_field_id' => 51, 'relation_model_id' => 3, 'relation_field_id' => 18, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '19,20'],
+            ['model_id' => 6, 'model_field_id' => 52, 'relation_model_id' => 1, 'relation_field_id' => 1, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '2,3'],
+            ['model_id' => 6, 'model_field_id' => 53, 'relation_model_id' => 3, 'relation_field_id' => 18, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '19,20'],
+            ['model_id' => 7, 'model_field_id' => 63, 'relation_model_id' => 1, 'relation_field_id' => 1, 'relation_condition' => '=', 'condition_type' => 'and', 'join_type' => 'left', 'relation_show_field_id' => '2,3'],
 
         ];
         $this->table('model_relation')->insert($data)->save();
@@ -321,6 +373,28 @@ class VuecmfDatabase extends Migrator
             ['id' => 19, 'action_name' => 'del_model_index', 'label' => '删除模型索引', 'api_path' => '/vuecmf/model_index/delete', 'model_id' => 5, 'action_type' => 'delete'],
             ['id' => 20, 'action_name' => 'get_model_list', 'label' => '模型下拉列表', 'api_path' => '/vuecmf/model', 'model_id' => 5, 'action_type' => 'dropdown'],
             ['id' => 21, 'action_name' => 'get_model_field_list', 'label' => '模型字段下拉列表', 'api_path' => '/vuecmf/model_field', 'model_id' => 5, 'action_type' => 'dropdown'],
+
+            ['id' => 22, 'action_name' => 'get_model_relation_list', 'label' => '模型关联管理列表', 'api_path' => '/vuecmf/model_relation', 'model_id' => 6, 'action_type' => 'list'],
+            ['id' => 23, 'action_name' => 'save_model_relation', 'label' => '保存模型关联', 'api_path' => '/vuecmf/model_relation/save', 'model_id' => 6, 'action_type' => 'save'],
+            ['id' => 24, 'action_name' => 'del_model_relation', 'label' => '删除模型关联', 'api_path' => '/vuecmf/model_relation/delete', 'model_id' => 6, 'action_type' => 'delete'],
+            ['id' => 25, 'action_name' => 'get_model_list', 'label' => '模型下拉列表', 'api_path' => '/vuecmf/model', 'model_id' => 6, 'action_type' => 'dropdown'],
+            ['id' => 26, 'action_name' => 'get_model_field_list', 'label' => '模型字段下拉列表', 'api_path' => '/vuecmf/model_field', 'model_id' => 6, 'action_type' => 'dropdown'],
+
+            ['id' => 27, 'action_name' => 'get_menu_list', 'label' => '菜单管理列表', 'api_path' => '/vuecmf/menu', 'model_id' => 7, 'action_type' => 'list'],
+            ['id' => 28, 'action_name' => 'save_menu', 'label' => '保存菜单', 'api_path' => '/vuecmf/menu/save', 'model_id' => 7, 'action_type' => 'save'],
+            ['id' => 29, 'action_name' => 'del_menu', 'label' => '删除菜单', 'api_path' => '/vuecmf/menu/delete', 'model_id' => 7, 'action_type' => 'delete'],
+            ['id' => 30, 'action_name' => 'get_model_list', 'label' => '模型下拉列表', 'api_path' => '/vuecmf/model', 'model_id' => 7, 'action_type' => 'dropdown'],
+            ['id' => 31, 'action_name' => 'get_menu_dropdown', 'label' => '菜单下拉列表', 'api_path' => '/vuecmf/menu/dropdown', 'model_id' => 7, 'action_type' => 'dropdown'],
+            ['id' => 32, 'action_name' => 'get_menu_nav', 'label' => '导航菜单', 'api_path' => '/vuecmf/menu/nav', 'model_id' => 7, 'action_type' => 'nav'],
+
+            ['id' => 33, 'action_name' => 'get_admin_list', 'label' => '管理员列表', 'api_path' => '/vuecmf/admin', 'model_id' => 8, 'action_type' => 'list'],
+            ['id' => 34, 'action_name' => 'save_admin', 'label' => '保存管理员', 'api_path' => '/vuecmf/admin/save', 'model_id' => 8, 'action_type' => 'save'],
+            ['id' => 35, 'action_name' => 'del_admin', 'label' => '删除管理员', 'api_path' => '/vuecmf/admin/delete', 'model_id' => 8, 'action_type' => 'delete'],
+            ['id' => 36, 'action_name' => 'admin_detail', 'label' => '管理员详情', 'api_path' => '/vuecmf/admin/detail', 'model_id' => 8, 'action_type' => 'detail'],
+            ['id' => 37, 'action_name' => 'get_admin_dropdown', 'label' => '管理员下拉列表', 'api_path' => '/vuecmf/admin/dropdown', 'model_id' => 8, 'action_type' => 'dropdown'],
+            ['id' => 38, 'action_name' => 'set_admin_role', 'label' => '分配角色', 'api_path' => '/vuecmf/admin/setRole', 'model_id' => 8, 'action_type' => 'set_role'],
+            ['id' => 39, 'action_name' => 'login', 'label' => '登录后台', 'api_path' => '/vuecmf/admin/login', 'model_id' => 8, 'action_type' => 'login'],
+            ['id' => 40, 'action_name' => 'logout', 'label' => '退出系统', 'api_path' => '/vuecmf/admin/logout', 'model_id' => 8, 'action_type' => 'logout'],
 
         ];
         $this->table('model_action')->insert($data)->save();

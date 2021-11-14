@@ -31,7 +31,6 @@ class Admin extends Base
         DataCheck::class
     ];
 
-
     /**
      * 显示资源列表
      *
@@ -53,6 +52,12 @@ class Admin extends Base
     {
         //
     }
+
+
+    public function index(){
+
+    }
+
 
     /**
      * 保存新建的资源
@@ -98,33 +103,20 @@ class Admin extends Base
      * @param  int  $id
      * @return \think\Response
      */
-    public function read($id)
+    public function detail($id)
     {
         echo 'action read ' . $id;
     }
 
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
+
+    public function dropdown(){
+
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+
+    public function setRole(){
     }
+
 
     /**
      * 删除指定资源
