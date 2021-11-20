@@ -8,13 +8,13 @@
 // +----------------------------------------------------------------------
 
 /**
- * ajax请求返回的数据结构
- * @param array $data
+ * ajax请求成功返回的数据结构
  * @param string $msg
+ * @param array $data
  * @param int $code
  * @return \think\response\Json
  */
-function ajaxReturn($data = [], $msg = '', $code = 0){
+function ajaxSuccess($msg = '', $data = [], $code = 0){
     return json([
         'data'  => $data,
         'msg'   => $msg,
@@ -22,6 +22,19 @@ function ajaxReturn($data = [], $msg = '', $code = 0){
     ]);
 }
 
-
+/**
+ * ajax请求失败返回的数据结构
+ * @param string $msg
+ * @param int $code
+ * @param array $data
+ * @return \think\response\Json
+ */
+function ajaxFail($msg = '', $code = 1000, $data = []){
+    return json([
+        'data'  => $data,
+        'msg'   => $msg,
+        'code'  => $code
+    ]);
+}
 
 

@@ -11,7 +11,6 @@ declare (strict_types = 1);
 namespace app\vuecmf\middleware;
 
 use tauthz\facade\Enforcer;
-use think\Exception;
 use think\facade\Session;
 
 class Auth
@@ -28,7 +27,7 @@ class Auth
             $login_user = Session::get('vuecmf_login_user');
 
             if(empty($login_user)){
-                return ajaxReturn([], '您还没有登录或登录已超时!', 1000);
+                return ajaxFail('您还没有登录或登录已超时!', 1003);
             }
 
             $app_name = strtolower(app()->http->getName()); //应用名称
@@ -36,13 +35,15 @@ class Auth
             $action = strtolower($request->action()); //操作名称
 
             $res = Enforcer::enforce($login_user, $app_name , $controller, $action);
+
             if(!$res){
-                return ajaxReturn([], '您没有访问权限!', 1001);
+                return ajaxFail('您没有访问权限!', 1004);
             }else{
                 return $next($request);
             }
-        }catch (Exception $e){
-            return ajaxReturn([], $e->getMessage(), 1002);
+
+        }catch (\Exception $e){
+            return ajaxFail($e->getMessage(), 1005);
         }
 
     }

@@ -13,6 +13,7 @@ namespace app\vuecmf\controller;
 use app\vuecmf\middleware\Auth;
 use app\vuecmf\middleware\DataCheck;
 use tauthz\facade\Enforcer;
+use think\Exception;
 use think\facade\Session;
 use think\Request;
 use app\vuecmf\model\Admin as AdminModel;
@@ -58,6 +59,22 @@ class Admin extends Base
 
     }
 
+    /**
+     * 保存
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function save(Request $request){
+        try{
+            $data = $request->post('data');
+            $res = event('AdminSave', $data);
+            if(!$res[0]) throw new Exception('保存失败');
+            return ajaxSuccess('保存成功');
+        }catch (\Exception $e){
+            return ajaxFail($e->getMessage());
+        }
+    }
+
 
     /**
      * 保存新建的资源
@@ -65,7 +82,7 @@ class Admin extends Base
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function test(Request $request)
     {
         /*AdminModel::create([
 
@@ -96,6 +113,7 @@ class Admin extends Base
 
         echo 'action save';
     }
+
 
     /**
      * 显示指定的资源

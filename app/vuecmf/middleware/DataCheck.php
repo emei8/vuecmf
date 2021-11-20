@@ -10,6 +10,8 @@ declare (strict_types = 1);
 
 namespace app\vuecmf\middleware;
 
+use app\vuecmf\model\ModelAction;
+use think\Exception;
 use think\exception\ValidateException;
 use think\Response;
 
@@ -29,43 +31,51 @@ class DataCheck
      */
     public function handle($request, \Closure $next)
     {
-        echo "check start <br>";
 
         try{
+            //获取当前动作路径
+            $app_name = strtolower(app()->http->getName()); //应用名称
+            $controller = strtolower($request->controller()); //控制器名称
+            $action = strtolower($request->action()); //操作名称
+            $api_path = '/' . $app_name . '/' . $controller . '/' . $action;
+            $path_arr = [$api_path, $api_path . '/'];
+            if($action == 'index'){
+                $path_arr[] = '/' . $app_name . '/' . $controller;
+                $path_arr[] = '/' . $app_name . '/' . $controller . '/';
+            }
+
+            //根据当前动作路径找到对应的模型
+            $model_id = ModelAction::whereIn('api_path', $path_arr)->value('model_id');
+
+            //dump($model_id);
+
+
             if(!$request->isPost()) throw new Exception('Request method error!');
             $data = $request->post();
-            dump($data);
             //$res = validate(User::class)->batch(true)->check($data);
 
             $rule = [
-                'name'  => 'require|max:25',
+                'username'  => 'require|max:25',
                 'age'   => 'number|between:1,120',
                 'email' => 'email',
             ];
 
             $message = [
-                'name.require' => '名称必须',
-                'name.max'     => '名称最多不能超过25个字符',
+                'username.require' => '名称必须',
+                'username.max'     => '名称最多不能超过25个字符',
                 'age.number'   => '年龄必须是数字',
                 'age.between'  => '年龄只能在1-120之间',
-                'email'        => '邮箱格式错误',
+                'email.email'        => '邮箱格式错误',
             ];
 
-            $res = validate($rule, $message)->batch(true)->check($data);
-
-            if($res !== true){
-                dump($res);
-                return Response::create('Check failed');
-            }
-
+            //validate($rule, $message)->batch(true)->check($data['data']);
 
             return $next($request);
 
         }catch (ValidateException $e){
-            dump("exception:");
-            return json($e->getError(),500);
-        }catch (Exception $e){
-            return json($e->getMessage(),500);
+            return ajaxFail($e->getMessage(), 1001);
+        }catch (\Exception $e){
+            return ajaxFail($e->getMessage(), 1002);
         }
 
     }

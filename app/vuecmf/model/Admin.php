@@ -17,5 +17,9 @@ use think\Model;
  */
 class Admin extends Model
 {
-    //
+    public function setPasswordAttr($value)
+    {
+        return password_hash($value,PASSWORD_DEFAULT);
+    }
+
 }
