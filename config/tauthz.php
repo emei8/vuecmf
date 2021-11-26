@@ -16,7 +16,7 @@ return [
     'enforcers' => [
         'basic' => [
             /*
-            * Model 设置
+            * ModelConfig 设置
             */
             'model' => [
                 // 可选值: "file", "text"

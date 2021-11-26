@@ -14,10 +14,10 @@ use think\Request;
 
 /**
  * 模型管理
- * Class Model
+ * Class ModelConfig
  * @package app\vuecmf\controller
  */
-class Model extends Base
+class ModelConfig extends Base
 {
     /**
      * 模型管理列表

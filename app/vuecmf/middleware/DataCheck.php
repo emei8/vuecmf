@@ -10,7 +10,7 @@ declare (strict_types = 1);
 
 namespace app\vuecmf\middleware;
 
-use app\vuecmf\model\ModelAction;
+use app\vuecmf\model\facade\ModelFormRules as ModelFormRulesService;
 use think\Exception;
 use think\exception\ValidateException;
 use think\Response;
@@ -23,7 +23,7 @@ use think\Response;
 class DataCheck
 {
     /**
-     * 处理请求
+     * 处理请求: 表单数据校验
      *
      * @param \think\Request $request
      * @param \Closure       $next
@@ -31,44 +31,23 @@ class DataCheck
      */
     public function handle($request, \Closure $next)
     {
-
         try{
-            //获取当前动作路径
-            $app_name = strtolower(app()->http->getName()); //应用名称
-            $controller = strtolower($request->controller()); //控制器名称
-            $action = strtolower($request->action()); //操作名称
-            $api_path = '/' . $app_name . '/' . $controller . '/' . $action;
-            $path_arr = [$api_path, $api_path . '/'];
-            if($action == 'index'){
-                $path_arr[] = '/' . $app_name . '/' . $controller;
-                $path_arr[] = '/' . $app_name . '/' . $controller . '/';
+            if(!$request->isPost()) throw new Exception('Request method error!');
+
+            //根据模型从model_form_rules表中取出数据校验规则
+            $rule_list = ModelFormRulesService::getRuleListByModel($request->model_id);
+
+            $rule = []; //校验规则
+            $message = []; //错误提示信息
+            foreach ($rule_list as $val){
+                $rule_value = $val->rule_type . (!empty($val->rule_value) ? ':' . $val->rule_value : '');
+                $rule[$val->field_name] = isset($rule[$val->field_name]) ? $rule[$val->field_name] . '|' . $rule_value : $rule_value;
+                $message[$val->field_name . '.' . $val->rule_type] = $val->error_tips;
             }
 
-            //根据当前动作路径找到对应的模型
-            $model_id = ModelAction::whereIn('api_path', $path_arr)->value('model_id');
-
-            //dump($model_id);
-
-
-            if(!$request->isPost()) throw new Exception('Request method error!');
+            //开始校验表单数据
             $data = $request->post();
-            //$res = validate(User::class)->batch(true)->check($data);
-
-            $rule = [
-                'username'  => 'require|max:25',
-                'age'   => 'number|between:1,120',
-                'email' => 'email',
-            ];
-
-            $message = [
-                'username.require' => '名称必须',
-                'username.max'     => '名称最多不能超过25个字符',
-                'age.number'   => '年龄必须是数字',
-                'age.between'  => '年龄只能在1-120之间',
-                'email.email'        => '邮箱格式错误',
-            ];
-
-            //validate($rule, $message)->batch(true)->check($data['data']);
+            validate($rule, $message)->batch(true)->check($data['data']);
 
             return $next($request);
 

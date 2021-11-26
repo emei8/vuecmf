@@ -8,15 +8,25 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\model\facade;
 
-use think\facade\View;
-use think\Request;
 
-class Index extends Base
+use think\Facade;
+
+/**
+ * Class ModelRelation
+ * @package app\vuecmf\model\facade
+ * @method static array getRelationInfo($model_id) 获取关联字段信息
+ */
+class ModelRelation extends Facade
 {
-    public function index(Request  $request)
+
+    /**
+     * @return string
+     */
+    protected static function getFacadeClass(): string
     {
-        return 'this is vuecmf app';
+        return 'app\vuecmf\model\ModelRelation';
     }
+
 }

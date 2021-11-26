@@ -12,7 +12,9 @@ namespace app\vuecmf\controller;
 
 use app\vuecmf\middleware\Auth;
 use app\vuecmf\middleware\DataCheck;
+use app\vuecmf\subscribe\AdminEvent;
 use tauthz\facade\Enforcer;
+use think\App;
 use think\Exception;
 use think\facade\Session;
 use think\Request;
@@ -26,11 +28,13 @@ use app\vuecmf\model\Admin as AdminModel;
  */
 class Admin extends Base
 {
-    //login, logout不受权限控制
-    protected $middleware = [
-        //Auth::class => ['except' => ['login','logout']],
-        DataCheck::class
-    ];
+
+    protected function initialize()
+    {
+        $event = app('app\vuecmf\subscribe\AdminEvent');
+        $this->eventPrefix = $event->eventPrefix;
+    }
+
 
     /**
      * 显示资源列表
@@ -51,28 +55,7 @@ class Admin extends Base
      */
     public function logout()
     {
-        //
-    }
 
-
-    public function index(){
-
-    }
-
-    /**
-     * 保存
-     * @param Request $request
-     * @return \think\response\Json
-     */
-    public function save(Request $request){
-        try{
-            $data = $request->post('data');
-            $res = event('AdminSave', $data);
-            if(!$res[0]) throw new Exception('保存失败');
-            return ajaxSuccess('保存成功');
-        }catch (\Exception $e){
-            return ajaxFail($e->getMessage());
-        }
     }
 
 
@@ -87,6 +70,9 @@ class Admin extends Base
         /*AdminModel::create([
 
         ]);*/
+
+        \app\vuecmf\model\ModelField::test();
+
         $res = input('data.test');
         echo $res;
 
@@ -115,6 +101,8 @@ class Admin extends Base
     }
 
 
+
+
     /**
      * 显示指定的资源
      *
@@ -128,7 +116,8 @@ class Admin extends Base
 
 
     public function dropdown(){
-
+        $post = $this->request->post();
+        dump($post);
     }
 
 

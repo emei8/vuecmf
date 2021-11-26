@@ -41,7 +41,7 @@ class VuecmfDatabase extends Migrator
      */
     public function up()
     {
-        $this->table('model', ['id' => true,  'comment'=>'系统--模型管理表'])
+        $this->table('model_config', ['id' => true,  'comment'=>'系统--模型配置管理表'])
             ->addColumn('table_name', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '模型对应的表名(不含表前缘)'])
             ->addColumn('label', 'string', ['length' => 64, 'null' => false, 'default' => '', 'comment' => '模型标签'])
             ->addColumn('default_action_id', 'integer', ['length' => 11, 'null' => false, 'default' => 0, 'comment' => '默认动作ID'])
@@ -165,8 +165,8 @@ class VuecmfDatabase extends Migrator
 
         //写入初始数据
         $data = [
-            // model 模型
-            ['id' => 1, 'table_name' => 'model', 'label' => '模型列表', 'default_action_id' => 1, 'component_tpl' => 'template/list/single_list', 'search_field_id' => '2,3,5', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型管理表', 'status' => 10],
+            // model_config 模型
+            ['id' => 1, 'table_name' => 'model_config', 'label' => '模型配置', 'default_action_id' => 1, 'component_tpl' => 'template/list/single_list', 'search_field_id' => '2,3,5', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型配置管理表', 'status' => 10],
             // model_action 模型
             ['id' => 2, 'table_name' => 'model_action', 'label' => '模型动作', 'default_action_id' => 4, 'component_tpl' => 'template/list/category_list', 'search_field_id' => '12,13,14,16', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型动作表', 'status' => 10],
             // model_field 模型
@@ -187,10 +187,10 @@ class VuecmfDatabase extends Migrator
             ['id' => 10, 'table_name' => 'model_form_rules', 'label' => '模型表单验证', 'default_action_id' => 46, 'component_tpl' => 'template/list/category_list', 'search_field_id' => '90,91,92', 'type' => 10, 'is_tree' => 20, 'remark' => '系统--模型表单验证设置表', 'status' => 10],
 
         ];
-        $this->table('model')->insert($data)->save();
+        $this->table('model_config')->insert($data)->save();
 
         $data = [
-            //表 model 字段
+            //表 model_config 字段
             ['id' => 1, 'field_name' => 'id', 'label' => 'ID', 'model_id' => 1, 'type' => 'int', 'length' => 11, 'decimal_length' => 0, 'is_null' => 20, 'note' => '自增ID', 'default_value' => 0, 'is_auto_increment' => 10, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 100, 'is_filter' => 20,  'sort_num' => 1, 'status' => 10],
             ['id' => 2, 'field_name' => 'table_name', 'label' => '表名', 'model_id' => 1, 'type' => 'varchar', 'length' => 64, 'decimal_length' => 0, 'is_null' => 20, 'note' => '模型对应的表名(不含表前缘)', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 10, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10,  'sort_num' => 2, 'status' => 10],
             ['id' => 3, 'field_name' => 'label', 'label' => '模型标签', 'model_id' => 1, 'type' => 'varchar', 'length' => 64, 'decimal_length' => 0, 'is_null' => 20, 'note' => '模型标签', 'default_value' => '', 'is_auto_increment' => 20, 'is_label' => 20, 'is_signed' => 20, 'is_show' => 10, 'is_fixed' => 20, 'column_width' => 150, 'is_filter' => 10,  'sort_num' => 3, 'status' => 10],
@@ -297,7 +297,7 @@ class VuecmfDatabase extends Migrator
         $this->table('model_field')->insert($data)->save();
 
         $data = [
-            //表model 索引
+            //表model_config 索引
             ['model_id' => 1, 'model_field_id' => '2', 'index_type' => 'UNIQUE'],
             //表 model_action 索引
             ['model_id' => 2, 'model_field_id' => '12,15', 'index_type' => 'UNIQUE'],
@@ -326,6 +326,21 @@ class VuecmfDatabase extends Migrator
             ['model_id' => 1, 'model_field_id' => 10, 'option_value' => 20, 'option_label' => '禁用'],
             ['model_id' => 2, 'model_field_id' => 17, 'option_value' => 10, 'option_label' => '开启'],
             ['model_id' => 2, 'model_field_id' => 17, 'option_value' => 20, 'option_label' => '禁用'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'char', 'option_label' => '固定长度字符串'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'varchar', 'option_label' => '可变长度字符串'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'text', 'option_label' => '多行文本'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'mediumtext', 'option_label' => '中型多行文本'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'longtext', 'option_label' => '大型多行文本'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'tinyint', 'option_label' => '小型数值'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'smallint', 'option_label' => '中型数值'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'int', 'option_label' => '大型数值'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'bigint', 'option_label' => '越大型数值'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'float', 'option_label' => '单精度浮点型'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'double', 'option_label' => '双精度浮点型'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'decimal', 'option_label' => '金额型'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'date', 'option_label' => '日期'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'datetime', 'option_label' => '日期时间'],
+            ['model_id' => 3, 'model_field_id' => 22, 'option_value' => 'timestamp', 'option_label' => '日期时间'],
             ['model_id' => 3, 'model_field_id' => 25, 'option_value' => 10, 'option_label' => '是'],
             ['model_id' => 3, 'model_field_id' => 25, 'option_value' => 20, 'option_label' => '否'],
             ['model_id' => 3, 'model_field_id' => 28, 'option_value' => 10, 'option_label' => '是'],
@@ -474,9 +489,9 @@ class VuecmfDatabase extends Migrator
         $this->table('model_relation')->insert($data)->save();
 
         $data = [
-            ['id' => 1, 'action_name' => 'get_model_list', 'label' => '模型管理列表', 'api_path' => '/vuecmf/model', 'model_id' => 1, 'action_type' => 'list'],
-            ['id' => 2, 'action_name' => 'save_model', 'label' => '保存模型', 'api_path' => '/vuecmf/model/save', 'model_id' => 1, 'action_type' => 'save'],
-            ['id' => 3, 'action_name' => 'del_model', 'label' => '删除模型', 'api_path' => '/vuecmf/model/delete', 'model_id' => 1, 'action_type' => 'delete'],
+            ['id' => 1, 'action_name' => 'get_model_config_list', 'label' => '模型管理列表', 'api_path' => '/vuecmf/model_config', 'model_id' => 1, 'action_type' => 'list'],
+            ['id' => 2, 'action_name' => 'save_model_config', 'label' => '保存模型', 'api_path' => '/vuecmf/model_config/save', 'model_id' => 1, 'action_type' => 'save'],
+            ['id' => 3, 'action_name' => 'del_model_config', 'label' => '删除模型', 'api_path' => '/vuecmf/model_config/delete', 'model_id' => 1, 'action_type' => 'delete'],
 
             ['id' => 4, 'action_name' => 'get_model_action_list', 'label' => '模型动作管理列表', 'api_path' => '/vuecmf/model_action', 'model_id' => 2, 'action_type' => 'list'],
             ['id' => 5, 'action_name' => 'save_model_action', 'label' => '保存模型动作', 'api_path' => '/vuecmf/model_action/save', 'model_id' => 2, 'action_type' => 'save'],
@@ -550,10 +565,15 @@ class VuecmfDatabase extends Migrator
         $data = [
             ['model_id' => 8, 'model_form_id' => 1, 'rule_type' => 'require', 'rule_value' => '', 'error_tips' => '用户名必填'],
             ['model_id' => 8, 'model_form_id' => 1, 'rule_type' => 'length', 'rule_value' => '4,32', 'error_tips' => '用户名长度为4到32个字符'],
+            ['model_id' => 8, 'model_form_id' => 3, 'rule_type' => 'require', 'rule_value' => '', 'error_tips' => '邮箱必填'],
+            ['model_id' => 8, 'model_form_id' => 3, 'rule_type' => 'email', 'rule_value' => '', 'error_tips' => '邮箱输入有误'],
+            ['model_id' => 8, 'model_form_id' => 4, 'rule_type' => 'require', 'rule_value' => '', 'error_tips' => '手机必填'],
+            ['model_id' => 8, 'model_form_id' => 4, 'rule_type' => 'mobile', 'rule_value' => '', 'error_tips' => '手机输入有误'],
         ];
         $this->table('model_form_rules')->insert($data)->save();
 
         $data = [
+            //password = 123456
             ['username' => 'vuecmf', 'password' => '$2y$10$aG.oLBIHALyWQj6lwHwag.ObD4mO3PU1GNntzOdKgpeOc96SHIVIy', 'email' => '2278667823@qq.com', 'mobile' => '18988888888', 'is_super' => 10],
         ];
         $this->table('admin')->insert($data)->save();
@@ -566,7 +586,7 @@ class VuecmfDatabase extends Migrator
 
     public function down()
     {
-        $this->table('model')->drop();
+        $this->table('model_config')->drop();
         $this->table('model_field')->drop();
         $this->table('field_option')->drop();
         $this->table('model_action')->drop();

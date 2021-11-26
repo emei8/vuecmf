@@ -8,15 +8,25 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\model\facade;
 
-use think\facade\View;
-use think\Request;
 
-class Index extends Base
+use think\Facade;
+
+/**
+ * Class ModelFormRules
+ * @package app\vuecmf\model\facade
+ * @method static array getRuleListByModel($model_id) 根据模型ID获取模型表单的校验规则
+ * @method static array getRuleListForForm($model_id) 获取模型表单的数据验证规则（前端使用）
+ */
+class ModelFormRules extends Facade
 {
-    public function index(Request  $request)
+    /**
+     * @return string
+     */
+    protected static function getFacadeClass(): string
     {
-        return 'this is vuecmf app';
+        return 'app\vuecmf\model\ModelFormRules';
     }
+
 }

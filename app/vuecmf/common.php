@@ -37,4 +37,17 @@ function ajaxFail($msg = '', $code = 1000, $data = []){
     ]);
 }
 
+/**
+ * 获取路由信息
+ * @param $request
+ * @return array
+ */
+function getRouteInfo($request){
+    return [
+        'app_name' => strtolower(app()->http->getName()), //应用名称
+        'controller' => strtolower($request->controller()), //控制器名称
+        'action' => strtolower($request->action()), //操作名称
+    ];
+}
+
 

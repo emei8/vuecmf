@@ -8,15 +8,14 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\model;
 
-use think\facade\View;
-use think\Request;
+use think\Model;
 
-class Index extends Base
+/**
+ * @mixin \think\Model
+ */
+class ModelIndex extends Model
 {
-    public function index(Request  $request)
-    {
-        return 'this is vuecmf app';
-    }
+    //
 }

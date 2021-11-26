@@ -8,15 +8,25 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\vuecmf\controller;
+namespace app\vuecmf\model\facade;
 
-use think\facade\View;
-use think\Request;
 
-class Index extends Base
+use think\Facade;
+
+/**
+ * Class ModelForm
+ * @package app\vuecmf\model\facade
+ * @method static array getFormInfo($model_id) 获取模型的表单信息
+ */
+class ModelForm extends Facade
 {
-    public function index(Request  $request)
+
+    /**
+     * @return string
+     */
+    protected static function getFacadeClass(): string
     {
-        return 'this is vuecmf app';
+        return 'app\vuecmf\model\ModelForm';
     }
+
 }

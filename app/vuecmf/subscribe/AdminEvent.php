@@ -13,10 +13,11 @@ namespace app\vuecmf\subscribe;
 use app\vuecmf\model\Admin;
 use think\Exception;
 
-class AdminEvent
+class AdminEvent extends BaseEvent
 {
 
-    protected $eventPrefix = 'Admin';
+    public $eventPrefix = 'Admin';
+
 
     /**
      * 新增/更新
