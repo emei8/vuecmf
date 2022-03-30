@@ -1,0 +1,35 @@
+<?php
+// +----------------------------------------------------------------------
+// | Copyright (c) 2019~2022 http://www.vuecmf.com All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed ( https://github.com/emei8/vuecmf/blob/master/LICENSE )
+// +----------------------------------------------------------------------
+// | Author: emei8 <2278667823@qq.com>
+// +----------------------------------------------------------------------
+declare (strict_types = 1);
+
+namespace app\vuecmf\model;
+
+use think\Model;
+
+/**
+ * {%classDoc%}模型
+ * Class {%className%}
+ * @package app\vuecmf\model
+ */
+class {%className%} extends Base
+{
+    /**
+     * 新增加或更新前
+     * @param Model $model
+     * @return mixed|void
+     */
+    public static function onBeforeWrite(Model $model)
+    {
+        $id_path = $model->pid;
+        getTreeIdPath($id_path, $model, $id_path);
+
+        $model->id_path = $id_path;
+    }
+
+}
