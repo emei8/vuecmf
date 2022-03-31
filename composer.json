@@ -6,6 +6,7 @@
         "thinkphp",
         "vuecmf"
     ],
+	"type": "project",
     "homepage": "http://www.vuecmf.com/",
     "license": "Apache-2.0",
     "autoload": {
@@ -32,15 +33,9 @@
         "symfony/var-dumper": "^4.2",
         "topthink/think-trace":"^1.0"
     },
-    "scripts": {
-        "post-autoload-dump": [
-            "@php think vuecmf:publish"
-        ]
-    },
 	"extra": {
         "think": {
             "services": [
-                "tauthz\\TauthzService",
                 "app\\vuecmf\\VuecmfService"
             ]
         }

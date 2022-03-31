@@ -2,7 +2,4 @@
 /.vscode
 /vendor
 *.log
-thinkphp
 .env
-.DS_Store
-composer.lock
