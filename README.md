@@ -1,6 +1,6 @@
 #欢迎使用VueCMF
 
-VueCMF内容管理快速开发框架v2.0+(后端API)
+VueCMF内容管理快速开发框架v2(后端API)
 
 
 ## VueCMF是什么？
