@@ -34,6 +34,9 @@
         "symfony/var-dumper": "^4.2",
         "topthink/think-trace":"^1.0"
     },
+	"config": {
+        "preferred-install": "dist"
+    },
 	"extra": {
         "think": {
             "services": [
